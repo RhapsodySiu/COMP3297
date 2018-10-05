@@ -12,6 +12,14 @@
   
   <body>
       <div class="container">
+          <ul class="nav">
+          <li class="nav-item">
+            <a class="nav-link" href="homepage.html">Homepage</a>
+          </li>
+          <li class="nav-item">
+              <a class="nav-link active" href="profile.html">Profile</a>
+          </li>
+        </ul>
           <div class="row mt-5 justify-content-center">
                 <div class="col-12 col-md-6 card mt-5 mb-5">
                   <div class="card-title">
@@ -21,9 +29,7 @@
                       <form>
                         <div class="form-group">
                           <label>Change email address</label>
-                          <input type="email" class="form-control disabled" value="pilot@hospital.com">
-
-                          <input type="text" class="form-control" placeholder="Enter Username" value="pilot2018" required>
+                          <input type="email" class="form-control disabled mb-3 mt-3" value="pilot@hospital.com">
                           <label for="exampleInputEmail1">Old password<small> - It can be changed later. It is advised to have at least 1 capital letter, 1 small letter and 1 number.</small></label>
                           <input type="password" class="form-control" placeholder="Enter Password">
                           <label for="exampleInputEmail1">New password</label>
@@ -38,7 +44,7 @@
                             <input type="text" class="form-control" value="Doe" disabled>
                           </div>
                           <label>Clinic managed <a href="#" data-toggle="tooltip" title="For clinic managers only">#</a></label>
-                          <select class="col-11 mt-2 form-control">
+                          <select class="col-11 mt-2 form-control" disabled>
                               <option>Tung Wah Group of Hospitals Fung Yiu King Hospital</option>
                               <option>The Duchess of Kent Children's Hospital at Sandy Bay</option>
                               <option>Prince Philip Dental Hospital</option>
@@ -66,7 +72,7 @@
             $('[data-toggle="tooltip"]').tooltip();
             $("#createBtn").click(function() {
               alert("Create account successfully!");
-              window.location.href = "index.html";
+              window.location.href = "homepage.html";
             });
           })
       </script>

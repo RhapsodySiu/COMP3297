@@ -12,7 +12,7 @@
   
   <body>
       <div class="container">
-        <h3>Clinic Manager version</h3>
+        <h3>Clinic Manager/Health Authority version</h3>
           <ul class="nav">
             <li class="nav-item">
               <a class="nav-link" href="homepage.html">Homepage</a>
@@ -29,10 +29,41 @@
           </ul>
         
         <hr>
-        <h3 class="mb-3 mt-3">Order detail</h3>
+        <h3 class="mb-3 mt-3">Order overview</h3>
         <p>Number of item: 4</p>
         <p>Weight: 21kg</p>
         <p>Priority: 2</p>
+        <button class="btn btn-primary mb-3" id="obtain">Obtain shopping label (avaialbe to warehouse personnel only)</button>
+        <h5>Order detail</h5>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Index</th>
+              <th>Description</th>
+              <th>Quantity</th>
+              <th>Weight</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Sodium Chloride 5% 250mL</td>
+              <td>12</td>
+              <td>2.75kg</td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Normal saline 250mL</td>
+              <td>10</td>
+              <td>2.48kg</td>
+            </tr>
+            <tr>
+              <td colspan="3">Total weight</td>
+              <td colspan="2">5.23kg</td>
+            </tr>
+          </tbody>
+        </table>
+        <h5>Status track</h5>
         <table class="table">
           <thead>
             <tr>
@@ -69,11 +100,18 @@
             </tr>
           </tbody>
         </table>
+        
+
       </div>
       <!-- JavaScript -->
       <!-- jQuery first, then Popper.js, then Bootstrap JS -->
       <script src="js/jquery.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
       <script src="js/bootstrap.min.js"></script>
+      <script>
+          $("#obtain").click(function() {
+              alert("Downloading..");
+          });
+      </script>
   </body>
 </html>

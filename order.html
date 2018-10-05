@@ -43,16 +43,24 @@
             <tr>
               <td>4565</td>
               <td>05/10/2018 13:21:45</td>
-              <td>20 Items, 5.2kg, Priority: 3</td>
+              <td>20 Items, 5.2kg, Priority: Low</td>
               <td>Queued for Processing</td>
               <td>05/10/2018 13:21:45</td>
               <td><a class="btn btn-info" href="order-detail.html">View</a><button class="ml-1 btn btn-warning">Cancel</button></td>
             </tr>
             <tr>
+              <td>4565</td>
+              <td>03/10/2018 21:21:21</td>
+              <td>29 Items, 18.4kg, Priority: Low</td>
+              <td>Processing by Warehouse</td>
+              <td>04/10/2018 20:59:44</td>
+              <td><a class="btn btn-info" href="order-detail.html">View</a><button class="ml-1 btn btn-warning">Cancel</button></td>
+            </tr>
+            <tr>
               <td>4102</td>
               <td>01/10/2018 05:59:00</td>
-              <td>25 Items, 4kg, Priority: 2</td>
-              <td>Shipped</td>
+              <td>25 Items, 4kg, Priority: Medium</td>
+              <td>Delivered</td>
               <td>03/10/2018 21:00:04</td>
               <td><button class="btn btn-info">View</button></td>
             </tr>
@@ -64,5 +72,10 @@
       <script src="js/jquery.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
       <script src="js/bootstrap.min.js"></script>
+      <script>
+          $("a.btn-warning").click(function() {
+              alert("The order is canceled");
+          });
+      </script>
   </body>
 </html>
