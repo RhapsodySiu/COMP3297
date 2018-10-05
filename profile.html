@@ -1,0 +1,74 @@
+<!doctype html>
+<html>
+  <head>
+      <title>Profile</title>
+      <!-- Required meta tags -->
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+      <!-- Bootstrap CSS -->
+      <link rel="stylesheet" href="css/bootstrap.min.css">
+  </head>
+  
+  <body>
+      <div class="container">
+          <div class="row mt-5 justify-content-center">
+                <div class="col-12 col-md-6 card mt-5 mb-5">
+                  <div class="card-title">
+                    <h3 class="col-sm-10">Profile</h3>
+                  </div>
+                    <div class="card-body">
+                      <form>
+                        <div class="form-group">
+                          <label>Change email address</label>
+                          <input type="email" class="form-control disabled" value="pilot@hospital.com">
+
+                          <input type="text" class="form-control" placeholder="Enter Username" value="pilot2018" required>
+                          <label for="exampleInputEmail1">Old password<small> - It can be changed later. It is advised to have at least 1 capital letter, 1 small letter and 1 number.</small></label>
+                          <input type="password" class="form-control" placeholder="Enter Password">
+                          <label for="exampleInputEmail1">New password</label>
+                          <input type="password" class="form-control" placeholder="Enter Password">
+                          <label for="exampleInputEmail1">Confirm password</label>
+                          <input type="password" class="form-control" placeholder="Enter Password">
+                          <div class="input-group mt-3">
+                            <div class="input-group-prepend">
+                              <span class="input-group-text">First and last name</span>
+                            </div>
+                            <input type="text" class="form-control ml-1" value="Joe" disabled>
+                            <input type="text" class="form-control" value="Doe" disabled>
+                          </div>
+                          <label>Clinic managed <a href="#" data-toggle="tooltip" title="For clinic managers only">#</a></label>
+                          <select class="col-11 mt-2 form-control">
+                              <option>Tung Wah Group of Hospitals Fung Yiu King Hospital</option>
+                              <option>The Duchess of Kent Children's Hospital at Sandy Bay</option>
+                              <option>Prince Philip Dental Hospital</option>
+                              <option>Tsan Yuk Hospital</option>
+                              <option>Canossa Hospital</option>
+                              <option>Matilda International Hospital</option>
+                              <option>Yan Chai Hospital Shan King Child Care Centre</option>
+                              <option>Central District Health Centre General Out-Patient Clinic</option>
+                          </select>
+                        </div>
+                        <button type="button" class="btn btn-primary" id="createBtn">Change information</button>
+                      </form>
+                    </div>
+
+                </div>
+            </div>
+      </div>
+      <!-- JavaScript -->
+      <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+      <script src="js/jquery.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+      <script src="js/bootstrap.min.js"></script>
+      <script>
+          $(function () {
+            $('[data-toggle="tooltip"]').tooltip();
+            $("#createBtn").click(function() {
+              alert("Create account successfully!");
+              window.location.href = "index.html";
+            });
+          })
+      </script>
+  </body>
+</html>
