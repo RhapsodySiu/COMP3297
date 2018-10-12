@@ -59,7 +59,7 @@
               <div class="input-group mb-3">
                 <input type="number" class="form-control col-6" min="0" max="10" step="1">
                 <div class="input-group-append">
-                  <button class="btn btn-outline-secondary" type="button">Add</button>
+                  <button class="btn btn-outline-secondary" data-dismiss="alert" type="button">Add</button>
                 </div>
               </div>
             </div>
@@ -73,7 +73,7 @@
               <div class="input-group mb-3">
                 <input type="number" class="form-control col-6" min="0" max="10" step="1">
                 <div class="input-group-append">
-                  <button class="btn btn-outline-secondary" type="button">Add</button>
+                  <button class="btn btn-outline-secondary" data-dismiss="alert" type="button">Add</button>
                 </div>
               </div>
             </div>
@@ -99,10 +99,24 @@
             </ul>
           </nav>
       </div>
+      <div class="alert alert-success col-6 alert-dismissable" role="alert">
+        <strong>Added</strong>
+      </div>
       <!-- JavaScript -->
       <!-- jQuery first, then Popper.js, then Bootstrap JS -->
       <script src="js/jquery.min.js"></script>
       <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
       <script src="js/bootstrap.min.js"></script>
+      <script>
+          $("button.btn-outline-secondary").click(function() {
+              $(this).parent().parent().find("input").val("");
+          });
+      </script>
   </body>
 </html>
+<!--
+1. In the pilot stage, who is responsible to add the item? How many of them.
+2. Any stock limitation?
+3. How many shown in page?
+4. Order preview position?
+-->
