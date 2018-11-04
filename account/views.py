@@ -1,7 +1,7 @@
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login
-from .forms import LoginForm
+from .forms import LoginForm, RegistrationForm
 from django.contrib.auth.decorators import login_required
 from django.template.context_processors import csrf
 
@@ -24,6 +24,18 @@ def user_login(request):
         form = LoginForm()
     return render(request, 'account/login.html', {'form': form})
 
+def register(request):
+    if request.method == 'POST':
+        user_form = RegistrationForm(request.POST)
+        if user_form.is_valid():
+            #create user objct but avoid aviod saving it yet
+            new_user = user_form.save(commit=False)
+            new_user.set_password(user_form.cleaned_data['password'])
+            new_user.save()
+            return render(request, 'account/register_done.html', {'new_user': new_user})
+    else:
+        user_form = RegistrationForm()
+    return render(request, 'account/register.html', {'user_form': user_form})
 
 # the dashboard
 @login_required

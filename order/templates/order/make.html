@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+{% block menu %} {% include "menu.html" %} {% endblock %}
+
+{% block title %} Make order {% endblock %}
+
+{% block content %}
+  <h1>Confirm order</h1>
+
+  <ul>
+    {% for item in cart %}
+	  <li>
+	  {{ item.quantity }} x {{ item.supply.description }}:
+	  <span>{{ item.total_weight }}kg</span>
+	  </li>
+	{% endfor %}
+  </ul>
+  <p>Total weight: {{ cart.get_total_weight }}kg</p>
+  <form action="." method="post" class="order-form">
+    {{ form.as_p }}
+	<p><input type="submit" class="btn btn-primary" value="Place order"></p>
+	{% csrf_token %}
+  </form>
+  
+{% endblock %}

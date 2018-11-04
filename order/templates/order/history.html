@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% load static %}
+{% block menu %} {% include "menu.html" %} {% endblock %}
+
+{% block title %} Order history {% endblock %}
+
+{% block content %}
+  <h1>Order history</h1>
+
+  <table class="cart table table-striped">
+      <thead>
+      <tr>
+        <td>Last updated</td>
+        <td>Order ID</td>
+        <td>Priority</td>
+        <td>Status</td>
+        <td>Action</td>
+      </tr>
+      </thead>
+      {% for order in orders %}
+	    <tr>
+		  <td>
+		  {% if order.status == 'Order' %}
+		    {{order.order_time}}
+		  {% elif order.status == 'Processing' %}
+		    {{order.processing_time}}
+		  {% elif order.status == 'Processed' %}
+		    {{order.processed_time}}
+		  {% elif order.status == 'Dispatched' %}
+		    {{order.dispatched_time}}
+		  {% else %}
+		    {{order.delivered_time}}
+		  {% endif %}
+		  </td>
+		  <td>{{order.id}}</td>
+		  <td>{{order.priority}}</td>
+		  <td>{{order.status}}</td>
+		  <td>
+		    <button class="btn btn-info btn-sm mr-2">Detail</button>
+			{% if order.status == 'Order' %}
+		    <button class="btn btn-warning btn-sm">Cancel</button>
+			{% endif %}
+		  </td>
+		</tr>
+	  {% endfor %}
+  </table>
+  
+{% endblock %}
