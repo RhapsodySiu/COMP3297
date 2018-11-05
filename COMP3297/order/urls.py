@@ -11,5 +11,6 @@ urlpatterns = [
     path('history/', views.order_history, name="order_history"),
     path('make/', views.order_create, name="order_create"),
     path('dispatch/', views.order_dispatch, name="order_dispatch"),
+    path('dispatch/downloadItinerary', views.download_itinerary, name="download_itinerary"),
     url(r'^test/$', views.test_view, name='test_view'),
 ]

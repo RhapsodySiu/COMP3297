@@ -1,7 +1,7 @@
 from django.shortcuts import render, get_object_or_404
 from .models import MedicalSupply, OrderContent, Order
 from account.models import ClinicManager
-from django.http import HttpResponse, JsonResponse
+from django.http import HttpResponse, JsonResponse, FileResponse
 # Pagination
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
 # For class-based view
@@ -9,9 +9,13 @@ from django.views.generic import ListView
 # Login authentication
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User, Group
+from django.conf.urls import url
 from .forms import OrderCreateForm
 from cart.forms import CartAddSupplyForm
 from cart.cart import Cart
+
+# import csv
+import csv
 
 # import the logging library
 import logging
@@ -93,12 +97,12 @@ def order_dispatch(request):
     # order_list = Order.objects.filter(order_by=request.user)
     order_list = list(Order.objects.filter(order_by=request.user))
     for_dispatch = []
+    in_queue = []
     med = []
     low = []
     total_weight = 0
-    logger.error(order_list)
     for order in order_list:
-        logger.error(order)
+        in_queue.append(order)
         if total_weight > 25:
             break
         else:
@@ -108,14 +112,9 @@ def order_dispatch(request):
                 med.append(order)
             else:
                 if total_weight + order.get_total_weight() < 25:
-                    order_list.remove(order)
+                    in_queue.remove(order)
                     for_dispatch.append(order)
                     total_weight = total_weight + order.get_total_weight()
-
-    logger.error("low: ")
-    logger.error(low)
-    logger.error("med: ")
-    logger.error(med)
 
     if total_weight < 25:
         for order in med:
@@ -123,7 +122,7 @@ def order_dispatch(request):
                 break
             else:
                 if total_weight + order.get_total_weight() < 25:
-                    order_list.remove(order)
+                    in_queue.remove(order)
                     for_dispatch.append(order)
                     total_weight = total_weight + order.get_total_weight()
 
@@ -133,8 +132,18 @@ def order_dispatch(request):
                 break
             else:
                 if total_weight + order.get_total_weight() < 25:
-                    order_list.remove(order)
+                    in_queue.remove(order)
                     for_dispatch.append(order)
                     total_weight = total_weight + order.get_total_weight()
         
-    return render(request, 'order/dispatch.html', {'for_dispatch': for_dispatch, 'in_queue': order_list, 'total_loc': len(for_dispatch), 'total_weight': total_weight})    
+    return render(request, 'order/dispatch.html', {'for_dispatch': for_dispatch, 'in_queue': in_queue, 'total_loc': len(for_dispatch), 'total_weight': total_weight})
+
+def download_itinerary(request):
+    with open('test.csv', 'w', newline='') as csvfile:
+        writer = csv.writer(csvfile)
+        writer.writerow(['testing','123'])
+    file = open('test.csv', 'rb')
+    response = FileResponse(file)
+    response['Content-Type'] = 'application/octet-stream'
+    response['Content-Disposition'] = 'attachment;filename="test.csv"'
+    return response
