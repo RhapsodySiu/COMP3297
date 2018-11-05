@@ -1,0 +1,20 @@
+<nav class="navbar navbar-expand-sm bg-light navbar-light">
+  <a class="nav-brand" href="{% url 'dashboard' %}">Air Supply Pilot System</a>
+  <ul class="navbar-nav">
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'order:supply_list' %}">Browse supplies</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'cart:cart_detail' %}">Temporary order</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'order:order_history' %}">View order</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'order:order_dispatch' %}">Dispatch order</a>
+    </li>
+    <li class="nav-item">
+      <a class="nav-link" href="{% url 'logout' %}">Logout</a>
+    </li>
+  </ul>
+</nav>

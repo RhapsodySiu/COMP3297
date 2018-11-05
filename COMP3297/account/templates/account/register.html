@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block title %}Create an account{% endblock %}
+
+{% block content %}
+  <h1>Create an account</h1>
+  <hr>
+  <p>Sign up to access ASP:</p>
+  <form class="form-group" action="{% url 'register' %}" method="post">
+    {{ user_form.as_p }}
+    {% csrf_token %}
+    <p><input class="btn btn-primary" type="submit" value="Create my account"></p>
+  </form>
+{% endblock %}

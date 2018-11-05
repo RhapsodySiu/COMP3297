@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+  <head>
+      <title>Reset password request</title>
+      <!-- Required meta tags -->
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+      <!-- Bootstrap CSS -->
+      <link rel="stylesheet" href="css/bootstrap.min.css">
+  </head>
+  
+  <body>
+      <div class="container">
+        <h3>Admin version</h3>
+          <ul class="nav">
+            <li class="nav-item">
+              <a class="nav-link" href="homepage.html">Homepage</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="profile.html">Profile</a>
+            </li>
+            <li class="nav-item ">
+              <a class="nav-link active" href="profile.html">Manage</a>
+            </li>
+          </ul>
+        
+        <hr>
+        <h3 class="mb-3 mt-3">Password request history</h3>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Order</th>
+              <th>Username</th>
+              <th>Request Time</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>williamsze</td>
+              <td>16/02/2018 05:38:00</td>
+              <td><a class="btn btn-info" href="#">Send Reset Link</a></td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>anniechan</td>
+              <td>28/02/2018 07:38:00</td>
+              <td><a class="btn btn-info" href="#">Send Reset Link</a></td>
+            </tr>
+            <tr>
+              <td>3</td>
+              <td>kevinwong</td>
+              <td>01/03/2018 09:42:00</td>
+              <td><a class="btn btn-info" href="#">Send Reset Link</a></td>
+            </tr>
+            <tr>
+              <td>4</td>
+              <td>justinor</td>
+              <td>05/03/2018 13:50:00</td>
+              <td><a class="btn btn-info" href="#">Send Reset Link</a></td>
+            </tr>
+            <tr>
+              <td>5</td>
+              <td>batman</td>
+              <td>14/03/2018 19:43:00</td>
+              <td><a class="btn btn-info disabled" href="#" disabled>Sent</a></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+      <!-- JavaScript -->
+      <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+      <script src="js/jquery.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+      <script src="js/bootstrap.min.js"></script>
+      <script>
+        $("a.btn").click(function() {
+            alert("Password reset link is sent to the selected user.");
+        });
+      </script>
+  </body>
+</html>

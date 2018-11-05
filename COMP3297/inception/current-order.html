@@ -1,0 +1,84 @@
+<!doctype html>
+<html>
+  <head>
+      <title>Current order</title>
+      <!-- Required meta tags -->
+      <meta charset="utf-8">
+      <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+      <!-- Bootstrap CSS -->
+      <link rel="stylesheet" href="css/bootstrap.min.css">
+  </head>
+  
+  <body>
+      <div class="container">
+        <h3>Clinic Manager version</h3>
+          <ul class="nav">
+            <li class="nav-item">
+              <a class="nav-link" href="homepage.html">Homepage</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link active" href="order.html">View order</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="browse.html">Browse</a>
+            </li>
+          </ul>
+        
+        <hr>
+        <h3 class="mb-3 mt-3">View order</h3>
+        <h5>Order overview</h5>
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Index</th>
+              <th>Description</th>
+              <th>Quantity</th>
+              <th>Weight</th>
+              <th>Action</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>1</td>
+              <td>Sodium Chloride 5% 250mL</td>
+              <td><input type="number" class="form-control" min="1" max="10" value="12" /></td>
+              <td>2.75kg</td>
+              <td><button class="btn btn-danger">Delete</button></td>
+            </tr>
+            <tr>
+              <td>2</td>
+              <td>Normal saline 250mL</td>
+              <td><input type="number" class="form-control" min="1" max="10" value="10" /></td>
+              <td>2.48kg</td>
+              <td><button class="btn btn-danger">Delete</button></td>
+            </tr>
+            <tr>
+              <td colspan="3">Total weight</td>
+              <td colspan="2">5.23kg</td>
+            </tr>
+          </tbody>
+        </table>
+        
+        <div class="row">
+            <label>Specify your order priority here </label>
+            <select class="form-control col-2 ml-2">
+                <option>High</option>
+                <option>Medium</option>
+                <option>Low</option>
+            </select>
+        </div>
+        <button class="btn btn-primary mt-3" id="submit">Submit order</button>
+      </div>
+      <!-- JavaScript -->
+      <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+      <script src="js/jquery.min.js"></script>
+      <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.3/umd/popper.min.js" integrity="sha384-vFJXuSJphROIrBnz7yo7oB41mKfc8JzQZiCq4NCceLEaO4IHwicKwpJf9c9IpFgh" crossorigin="anonymous"></script>
+      <script src="js/bootstrap.min.js"></script>
+      <script>
+          $("#submit").click(function() {
+              alert("The order is submited.");
+          });
+      </script>
+  </body>
+</html>
