@@ -1,5 +1,7 @@
 pandas
 numpy
-more-itertool
+more-itertools
 pulp
 tsp
+django-enumfields
+Pillow
