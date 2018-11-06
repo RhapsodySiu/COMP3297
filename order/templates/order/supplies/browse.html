@@ -14,7 +14,7 @@
   </div>
   <div class="d-flex justify-content-around row mt-4">
   {% for supply in supplies %}
-    <div class="card col-12 col-md-4 col-lg-3">
+    <div class="m-1 card col-12 col-md-4 col-lg-2">
       <img class="card-img-top" src="{{ supply.img.url }}" alt="Card image cap">
       <div class="card-body">
         <h5 class="card-title">{{ supply.description }}
@@ -28,7 +28,7 @@
           </form>
       </div>
     </div>
-    {% if forloop.counter|divisibleby:4 %}<div class="hr-100"></div>{% endif %}
+    {% if forloop.counter|divisibleby:4 %}{% endif %}
   {% endfor %}
   </div>
   

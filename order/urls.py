@@ -10,5 +10,6 @@ urlpatterns = [
     path('search/', views.search_view, name="search_view"),
     path('history/', views.order_history, name="order_history"),
     path('make/', views.order_create, name="order_create"),
+    path('detail/<uuid:order_id>/', views.order_detail, name="order_detail"),
     url(r'^test/$', views.test_view, name='test_view'),
 ]
