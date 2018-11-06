@@ -1,4 +1,4 @@
-"""config URL Configuration
+"""ASPv1 URL Configuration
 
 The `urlpatterns` list routes URLs to views. For more information please see:
     https://docs.djangoproject.com/en/2.1/topics/http/urls/
@@ -21,7 +21,8 @@ from django.conf.urls.static import static
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('cart/', include('cart.urls')),
     path('', include('account.urls')),
-    path('supplies/', include('content.urls')),
+    path('order/', include('order.urls')),
+    path('dispatch/', include('dispatch.urls')),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
-#helper function only works in debug mode and is for local testing only

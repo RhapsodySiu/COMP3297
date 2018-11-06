@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% load static %}
+{% block menu %} {% include "menu.html" %} {% endblock %}
+
+{% block title %} Order detail {% endblock %}
+
+{% block content %}
+  <a href="{% url 'order:order_history' %}" class="m-3 btn btn-primary">Back</a>
+  <h1>Order detail</h1>
+  <ul>
+    <li>Order id: <span>{{order.id}}</span></li>
+    <li>Clinic: {{order.clinic}}</li>
+    <li>Priority: {{order.priority}}</li>
+    <li>Status: {{order.status}}</li>
+    <li>Order time: {% if not order.order_time %}-{% else %}{{order.order_time}}{%endif%}</li>
+    <li>Processing time: {% if not order.processing_time %}-{% else %}{{order.processing_time}}{%endif%}</li>
+    <li>Processed time: {% if not order.processed_time %}-{% else %}{{order.processed_time}}{%endif%}</li>
+    <li>Dispatched time: {% if not order.dispatched_time %}-{% else %}{{order.dispatched_time}}{%endif%}</li>
+    <li>Delivered time: {% if not order.delivered_time %}-{% else %}{{order.delivered_time}}{%endif%}</li>
+  </ul>
+  <h3>Content</h3>
+  <table class="cart table table-striped">
+      <thead>
+      <tr>
+        <td>Type</td>
+        <td>Name</td>
+        <td>Quantity</td>
+        <td>Weight</td>
+        <td>Total weight</td>
+      </tr>
+      </thead>
+      {% for item in content %}
+        {% with supply=item.medical_supply %}
+          <tr>
+            <td>{{ supply.type }}</td>
+            <td>{{ supply.description }}</td>
+            <td class="num">{{ item.quantity }}</td>
+            <td class="num">{{ item.medical_supply.weight }}kg</td>
+            <td class="num">{{ item.weight }}kg</td>
+          </tr>
+        {% endwith %}
+      {% endfor %}
+	  <tr><td colspan="4">Total: </td><td>{{ weight }}kg</td></tr>
+  </table>
+  
+{% endblock %}

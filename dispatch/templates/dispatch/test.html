@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% load static %}
+{% block menu %} {% include "menu.html" %} {% endblock %}
+
+{% block title %} Dispatch order {% endblock %}
+
+{% block content %}
+	<h3 class="mb-3">Result</h3>
+	<h5>{{output}}</h5>
+{% endblock %}

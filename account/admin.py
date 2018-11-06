@@ -1,3 +1,6 @@
 from django.contrib import admin
+from .models import ClinicManager
 
-# Register your models here.
+@admin.register(ClinicManager)
+class ClinicManagerAdmin(admin.ModelAdmin):
+    list_display = ['user', 'clinic']
