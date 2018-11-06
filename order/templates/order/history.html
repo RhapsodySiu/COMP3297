@@ -38,7 +38,7 @@
 		  <td>
 		    <a href="{% url 'order:order_detail' order.id %}" class="btn btn-info btn-sm mr-2">Detail</a>
 			{% if order.status.label == "Order" %}
-		    <button class="btn btn-warning btn-sm">Cancel</button>
+		    <a href="{% url 'order:cancel_order' order.id %}" class="btn btn-warning btn-sm">Cancel</a>
 			{% endif %}
 		  </td>
 		</tr>

@@ -15,11 +15,15 @@ class Cart(object):
         supply_id = str(supply.id) # stringify id for JSON
         if supply_id not in self.cart:
             self.cart[supply_id] = {'quantity': 0, 'weight': str(supply.weight)}
-            
         if update_quantity:
-            self.cart[supply_id]['quantity'] = quantity
+            old = self.cart[supply_id]['quantity']
+            if (int(quantity) - int(old)) < 0:
+                if (Decimal(supply.weight) * (int(quantity) - int(old))) <= 23.8:
+                    self.cart[supply_id]['quantity'] = quantity
         else:
-            self.cart[supply_id]['quantity'] += quantity
+            if (supply.weight * quantity + self.get_total_weight()) <= 23.8:
+                self.cart[supply_id]['quantity'] += quantity
+        self.get_total_weight()
         self.save()
     
     def save(self):

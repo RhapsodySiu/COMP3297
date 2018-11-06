@@ -1,5 +1,5 @@
 import uuid
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from .models import MedicalSupply, OrderContent, Order
 from account.models import ClinicManager
 from django.http import HttpResponse, JsonResponse
@@ -105,6 +105,11 @@ def order_detail(request, order_id):
     order_detail = OrderContent.objects.filter(order=overview)
     weight = overview.get_total_weight()
     return render(request, 'order/order_detail.html', {'order': overview, 'content': order_detail, 'weight': weight})
+
+@login_required
+def cancel_order(request, order_id):
+    Order.objects.filter(id=order_id).delete()
+    redirect("order_history")
 
 @login_required
 def order_dispatch(request):

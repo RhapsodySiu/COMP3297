@@ -45,6 +45,24 @@ class Hospital(Location):
     def __str__(self):
         return self.name
 
+class DistanceClinic(models.Model):
+    a = models.ForeignKey(Clinic, related_name="clinicA", on_delete=models.CASCADE)
+    b = models.ForeignKey(Clinic, related_name="clinicB", on_delete=models.CASCADE)
+    distance = models.DecimalField(max_digits=5, decimal_places=2)
+    class Meta:
+        unique_together = (("a", "b"),)
+    def __str__(self):
+        return str(self.distance) + "km" + ": " + self.a.name + " and " + self.b.name 
+
+class DistanceClinicHospital(models.Model):
+    a = models.ForeignKey(Hospital, related_name="hospital", on_delete=models.CASCADE)
+    b = models.ForeignKey(Clinic, related_name="clinic", on_delete=models.CASCADE)
+    distance = models.DecimalField(max_digits=5, decimal_places=2)
+    class Meta:
+        unique_together = (("a", "b"),)
+    def __str__(self):
+        return str(self.distance) + "m" + ": " + self.a.name + " and " + self.b.name 
+
 # enum field, in filter: m = MyModel.objects.filter(priority=priority.HIGH), in form: priority = EnumIntegerField(...).formField()
 class Priority(Enum):
     HIGH = 1
