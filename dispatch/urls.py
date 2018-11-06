@@ -8,5 +8,5 @@ app_name = 'dispatch'
 urlpatterns = [
     path('', views.order_dispatch, name="order_dispatch"),
     path('downloadItinerary/', views.download_itinerary, name="download_itinerary"),
-    path('test/', views.test, name="test")
+    path('markDispatched/', views.mark_dispatched, name="mark_dispatched")
 ]

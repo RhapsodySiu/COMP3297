@@ -8,13 +8,18 @@
 	<h3 class="mb-3">Order record</h3>
 	<p>{{test}}</p>
 	<h5>Orders to be loaded to the next available drone</h5>
-	<form action="{% url 'dispatch:test' %}" method="get">
+	<form action="{% url 'dispatch:download_itinerary' %}" method="get">
 	  {% for order in for_dispatch %}
-	    <input type="hidden" name="location" value="{{order.clinic.id}}">
+	    <input type="hidden" name="order" value="{{order.id}}">
 	  {% endfor %}
 	<button type="submit" class="btn btn-primary mb-3" id="generate">Generate drone itinerary</button>
 	</form>
+    <form action="{% url 'dispatch:mark_dispatched' %}" method="get">
+        {% for order in for_dispatch %}
+	       <input type="hidden" name="order" value="{{order.id}}">
+        {% endfor %}
 	<button class="btn btn-info mb-3 ml-2" id="dispatched">Mark these orders as dispatched</button>
+    </form>
 	<table class="table">
 		<thead>
 			<tr>

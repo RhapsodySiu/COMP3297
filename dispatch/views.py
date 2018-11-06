@@ -1,4 +1,4 @@
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect
 from order.models import Order, DistanceClinicHospital, DistanceClinic
 from django.http import HttpResponse, JsonResponse, FileResponse
 # Pagination
@@ -21,11 +21,12 @@ logger = logging.getLogger(__name__)
 
 import tsp
 import numpy
-def test(dispatch_list):
+def generate_itinerary(dispatch_list):
     # get the clinics involved: 0 represents the hospital
     t = [0]
     clinics = {}
-    for order in dispatch_list:
+    for orderUUID in dispatch_list:
+        order = Order.objects.get(id=orderUUID)
         if order.clinic.id not in t:
             t.append(order.clinic.id)
             clinics[str(order.clinic.id)] = order.clinic
@@ -74,7 +75,7 @@ def test(dispatch_list):
 
 def order_dispatch(request):
     # order_list = Order.objects.filter(order_by=request.user)
-    order_list = list(Order.objects.filter(order_by=request.user))
+    order_list = list(Order.objects.filter(order_by=request.user).exclude(status=4).exclude(status=5))
     for_dispatch = []
     in_queue = []
     med = []
@@ -114,15 +115,28 @@ def order_dispatch(request):
                     in_queue.remove(order)
                     for_dispatch.append(order)
                     total_weight = total_weight + order.get_total_weight()
-    t = test(for_dispatch)
-    return render(request, 'dispatch/dispatch.html', {'for_dispatch': for_dispatch, 'in_queue': in_queue, 'total_loc': len(for_dispatch), 'total_weight': total_weight, 'test': t["ret"]})
+
+    return render(request, 'dispatch/dispatch.html', {'for_dispatch': for_dispatch, 'in_queue': in_queue, 'total_loc': len(for_dispatch), 'total_weight': total_weight})
 
 def download_itinerary(request):
-    with open('test.csv', 'w', newline='') as csvfile:
+    orders = request.GET.getlist('order')
+    itinerary = generate_itinerary(orders)
+    count = len(itinerary['ret'])
+    with open('itinerary.csv', 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
-        writer.writerow(['testing','123'])
-    file = open('test.csv', 'rb')
+        writer.writerow(["Order", "Name", "Latitude", "Longitude", "Altitude"])
+        for x in range(count):
+            writer.writerow([x, itinerary['name'][count-x-1], itinerary['latitude'][count-x-1], itinerary['longitude'][count-x-1], itinerary['altitude'][count-x-1] ])
+    file = open('itinerary.csv', 'rb')
     response = FileResponse(file)
     response['Content-Type'] = 'application/octet-stream'
-    response['Content-Disposition'] = 'attachment;filename="test.csv"'
+    response['Content-Disposition'] = 'attachment;filename="itinerary.csv"'
     return response
+
+def mark_dispatched(request):
+    orders = request.GET.getlist('order')
+    for orderUUID in orders:
+        order = Order.objects.get(id=orderUUID)
+        order.status = 4
+        order.save()
+    return redirect('dispatch:order_dispatch', permanent=True)
