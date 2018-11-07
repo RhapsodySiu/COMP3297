@@ -9,6 +9,8 @@ from django.views.generic import ListView
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User, Group
 from django.conf.urls import url
+#datetime
+from datetime import datetime
 
 # import csv
 import csv
@@ -35,11 +37,11 @@ def generate_itinerary(dispatch_list):
     d = numpy.zeros((len(t), len(t)))
     
     # return list
-    ret = ["22.270257,114.131376,161.00"]
     name = ["Queen Mary Hospital Drone Port"]
     latitude = [22.270257]
     longitude = [114.131376]
     altitude = [161.00]
+    # calculate distance matrix
     for i, a in enumerate(t):
         for j, b in enumerate(t):
             if i == 0 and j != 0: # i is hospital
@@ -65,16 +67,13 @@ def generate_itinerary(dispatch_list):
         if id != 0:
             c = clinics[str(id)]
             s = str(c.latitude) + "," + str(c.longitude) + "," + str(c.altitude)
-            ret.append(s)
-            name.append(clinics[str(id)].name)
-            latitude.append(clinics[str(id)].latitude)
-            longitude.append(clinics[str(id)].longitude)
-            altitude.append(clinics[str(id)].altitude)
-    #t = tsp.tsp([(0,0), (0,1), (1,2), (4,1)])
-    return {'ret': ret, 'name': name, 'latitude': latitude, 'longitude': longitude, 'altitude':altitude}
+            name.insert(0,clinics[str(id)].name)
+            latitude.insert(0,clinics[str(id)].latitude)
+            longitude.insert(0,clinics[str(id)].longitude)
+            altitude.insert(0,clinics[str(id)].altitude)
+    return {'name': name, 'latitude': latitude, 'longitude': longitude, 'altitude':altitude}
 
 def order_dispatch(request):
-    # order_list = Order.objects.filter(order_by=request.user)
     order_list = list(Order.objects.filter(order_by=request.user).exclude(status=4).exclude(status=5))
     for_dispatch = []
     in_queue = []
@@ -121,12 +120,11 @@ def order_dispatch(request):
 def download_itinerary(request):
     orders = request.GET.getlist('order')
     itinerary = generate_itinerary(orders)
-    count = len(itinerary['ret'])
     with open('itinerary.csv', 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(["Order", "Name", "Latitude", "Longitude", "Altitude"])
-        for x in range(count):
-            writer.writerow([x, itinerary['name'][count-x-1], itinerary['latitude'][count-x-1], itinerary['longitude'][count-x-1], itinerary['altitude'][count-x-1] ])
+        for x in range(len(itinerary)):
+            writer.writerow([x, itinerary['name'][x], itinerary['latitude'][x], itinerary['longitude'][x], itinerary['altitude'][x] ])
     file = open('itinerary.csv', 'rb')
     response = FileResponse(file)
     response['Content-Type'] = 'application/octet-stream'
@@ -138,5 +136,6 @@ def mark_dispatched(request):
     for orderUUID in orders:
         order = Order.objects.get(id=orderUUID)
         order.status = 4
+        order.dispatched_time = datetime.now()
         order.save()
     return redirect('dispatch:order_dispatch', permanent=True)

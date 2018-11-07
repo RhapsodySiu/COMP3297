@@ -1,5 +1,6 @@
 {% extends "base.html" %}
 {% load static %}
+{% load order_extra %}
 {% block menu %} {% include "menu.html" %} {% endblock %}
 
 {% block title %} Order detail {% endblock %}
@@ -36,7 +37,7 @@
             <td>{{ supply.description }}</td>
             <td class="num">{{ item.quantity }}</td>
             <td class="num">{{ item.medical_supply.weight }}kg</td>
-            <td class="num">{{ item.weight }}kg</td>
+            <td class="num">{{ item.weight|multiply:item.quantity }}kg</td>
           </tr>
         {% endwith %}
       {% endfor %}

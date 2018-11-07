@@ -18,12 +18,12 @@
         {% for order in for_dispatch %}
 	       <input type="hidden" name="order" value="{{order.id}}">
         {% endfor %}
-	<button class="btn btn-info mb-3 ml-2" id="dispatched">Mark these orders as dispatched</button>
+	<button class="btn btn-info mb-3 ml-2" type="submit" id="dispatched">Mark these orders as dispatched</button>
     </form>
 	<table class="table">
 		<thead>
 			<tr>
-			<th>Order ID'dispatch:download_itinerary'</th>
+			<th>Order ID</th>
 			<th>Priority</th>
 			<th>Clinic</th>
 			<th>Total shipping weight</th>
@@ -74,7 +74,7 @@
 						</td>
 						<td>{{order.clinic}}</td>
 						<td>{{order.get_total_weight}} kg</td>
-						<td><a class="btn btn-info" href="">View</a></td>
+						<td><a class="btn btn-info" href="{% url 'order:order_detail' order.id %}">View</a></td>
 					</tr>
 				{% endfor %}
 			</tbody>
