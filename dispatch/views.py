@@ -120,10 +120,12 @@ def order_dispatch(request):
 def download_itinerary(request):
     orders = request.GET.getlist('order')
     itinerary = generate_itinerary(orders)
+    test = 0
     with open('itinerary.csv', 'w', newline='') as csvfile:
         writer = csv.writer(csvfile)
         writer.writerow(["Order", "Name", "Latitude", "Longitude", "Altitude"])
-        for x in range(len(itinerary)):
+        for x in range(len(itinerary['name'])):
+            test += 1
             writer.writerow([x, itinerary['name'][x], itinerary['latitude'][x], itinerary['longitude'][x], itinerary['altitude'][x] ])
     file = open('itinerary.csv', 'rb')
     response = FileResponse(file)
