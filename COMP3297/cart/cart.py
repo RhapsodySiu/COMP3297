@@ -55,7 +55,7 @@ class Cart(object):
         return sum(item['quantity'] for item in self.cart.values())
         
     def get_total_weight(self):
-        return sum(Decimal(item['weight']) * item['quantity'] for item in self.cart.values())
+        return round(float(sum(Decimal(item['weight']) * item['quantity'] for item in self.cart.values()))+1.2, 2)
         
     def clear(self):
         del self.session[settings.CART_SESSION_ID]

@@ -20,13 +20,13 @@
       {% for order in orders %}
 	    <tr>
 		  <td>
-		  {% if order.status == 'Order' %}
+		  {% if order.status.label == 'Order' %}
 		    {{order.order_time}}
-		  {% elif order.status == 'Processing' %}
+		  {% elif order.status.label == 'Processing' %}
 		    {{order.processing_time}}
-		  {% elif order.status == 'Processed' %}
+		  {% elif order.status.label == 'Processed' %}
 		    {{order.processed_time}}
-		  {% elif order.status == 'Dispatched' %}
+		  {% elif order.status.label == 'Dispatched' %}
 		    {{order.dispatched_time}}
 		  {% else %}
 		    {{order.delivered_time}}
@@ -34,15 +34,18 @@
 		  </td>
 		  <td>{{order.id}}</td>
 		  <td>{{order.priority}}</td>
-		  <td>{{order.status}}</td>
+		  <td>{{order.status.label}}</td>
 		  <td>
-		    <button class="btn btn-info btn-sm mr-2">Detail</button>
-			{% if order.status == 'Order' %}
-		    <button class="btn btn-warning btn-sm">Cancel</button>
+		    <a href="{% url 'order:order_detail' order.id %}" class="btn btn-info btn-sm mr-2">Detail</a>
+			{% if order.status.label == "Order" %}
+		    <a href="{% url 'order:cancel_order' order.id %}" class="btn btn-warning btn-sm">Cancel</a>
 			{% endif %}
+      {% if order.status.label == "Dispatched" %}
+        <a href="{% url 'order:mark_delivered' order.id %}" class="btn btn-success btn-sm">Delivered</a>
+      {% endif %}
 		  </td>
 		</tr>
 	  {% endfor %}
   </table>
-  
+
 {% endblock %}

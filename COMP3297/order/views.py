@@ -1,4 +1,5 @@
-from django.shortcuts import render, get_object_or_404
+import uuid
+from django.shortcuts import render, get_object_or_404, redirect
 from .models import MedicalSupply, OrderContent, Order
 from account.models import ClinicManager
 from django.http import HttpResponse, JsonResponse
@@ -12,12 +13,7 @@ from django.contrib.auth.models import User, Group
 from .forms import OrderCreateForm
 from cart.forms import CartAddSupplyForm
 from cart.cart import Cart
-
-# import the logging library
-import logging
-
-# Get an instance of a logger
-logger = logging.getLogger(__name__)
+from datetime import datetime
 
 # Can use userId and User filter to find which group does the current user belong to
 def test_view(request):
@@ -30,14 +26,13 @@ def test_view(request):
 
 # Handle display of medical supplies
 """class ShowSuppliesView(ListView):
-    queryset = MedicalSupplies.objects.all()
+    queryset = MedicalSupply.objects.all()
     context_object_name = 'supplies'
     paginate_by = 15
     template_name = 'content/supplies/browse.html'
 """
 
 @login_required
-
 def supply_list(request):
     object_list = MedicalSupply.objects.all()
     paginator = Paginator(object_list, 15)
@@ -51,6 +46,7 @@ def supply_list(request):
         supplies = paginator.page(paginator.num_pages)
     return render(request,'order/supplies/browse.html', {'page': page, 'supplies': supplies, 'cart_supply_form': cart_supply_form})
 
+@login_required
 def search_view(request):
     query = request.GET.get('q')
     object_list = MedicalSupply.objects.filter(description__icontains=query)
@@ -65,14 +61,32 @@ def search_view(request):
         supplies = paginator.page(paginator.num_pages)
     return render(request,'order/supplies/browse.html', {'page': page, 'supplies': supplies, 'cart_supply_form': cart_supply_form})
 
+@login_required
+def category_view(request):
+    query = request.GET.get('q')
+    object_list = MedicalSupply.objects.filter(type=query)
+    paginator = Paginator(object_list, 15)
+    page = request.GET.get('page')
+    cart_supply_form = CartAddSupplyForm()
+    try:
+        supplies = paginator.page(page)
+    except PageNotAnInteger:
+        supplies = paginator.page(1)
+    except EmptyPage:
+        supplies = paginator.page(paginator.num_pages)
+    return render(request,'order/supplies/browse.html', {'page': page, 'supplies': supplies, 'cart_supply_form': cart_supply_form})
+
+@login_required
 def order_create(request):
     cart = Cart(request)
     if request.method == 'POST':
         form = OrderCreateForm(request.POST)
-        form.clinic = ClinicManager.objects.get(user=request.user)
-        form.order_by = request.user
         if form.is_valid():
-            order = form.save()
+            order = form.save(commit=False)
+            order.order_by = request.user
+            served = ClinicManager.objects.get(user=request.user)
+            order.clinic = served.clinic
+            order.save()
             for item in cart:
                 OrderContent.objects.create(order=order, medical_supply=item['supply'],weight=item['weight'], quantity=item['quantity'])
             cart.clear()
@@ -81,24 +95,42 @@ def order_create(request):
         form = OrderCreateForm()
     return render(request, 'order/make.html', {'cart': cart, 'form':form})
 
+@login_required
 def order_history(request):
     order_list = Order.objects.filter(order_by=request.user)
     return render(request, 'order/history.html', {'orders': order_list})
 
-def order_detail(request):
-    order_id = request.GET.get('id')
-    order_detail = Order.objects.filter(id=order_id)
+@login_required
+def order_detail(request, order_id):
+    overview = get_object_or_404(Order, id=order_id)
+    order_detail = OrderContent.objects.filter(order=overview)
+    weight = overview.get_total_weight()
+    return render(request, 'order/order_detail.html', {'order': overview, 'content': order_detail, 'weight': weight})
 
+@login_required
+def cancel_order(request, order_id):
+    Order.objects.filter(id=order_id).delete()
+    return redirect("order:order_history")
+
+@login_required
+def mark_delivered(request, order_id):
+    order = Order.objects.get(id=order_id)
+    order.status=5
+    order.delivered_time = datetime.now()
+    order.save()
+    return redirect("order:order_history")
+
+@login_required
 def order_dispatch(request):
     # order_list = Order.objects.filter(order_by=request.user)
     order_list = list(Order.objects.filter(order_by=request.user))
     for_dispatch = []
+    in_queue = []
     med = []
     low = []
     total_weight = 0
-    logger.error(order_list)
     for order in order_list:
-        logger.error(order)
+        in_queue.append(order)
         if total_weight > 25:
             break
         else:
@@ -108,14 +140,9 @@ def order_dispatch(request):
                 med.append(order)
             else:
                 if total_weight + order.get_total_weight() < 25:
-                    order_list.remove(order)
+                    in_queue.remove(order)
                     for_dispatch.append(order)
                     total_weight = total_weight + order.get_total_weight()
-
-    logger.error("low: ")
-    logger.error(low)
-    logger.error("med: ")
-    logger.error(med)
 
     if total_weight < 25:
         for order in med:
@@ -123,7 +150,7 @@ def order_dispatch(request):
                 break
             else:
                 if total_weight + order.get_total_weight() < 25:
-                    order_list.remove(order)
+                    in_queue.remove(order)
                     for_dispatch.append(order)
                     total_weight = total_weight + order.get_total_weight()
 
@@ -133,8 +160,8 @@ def order_dispatch(request):
                 break
             else:
                 if total_weight + order.get_total_weight() < 25:
-                    order_list.remove(order)
+                    in_queue.remove(order)
                     for_dispatch.append(order)
                     total_weight = total_weight + order.get_total_weight()
-        
-    return render(request, 'order/dispatch.html', {'for_dispatch': for_dispatch, 'in_queue': order_list, 'total_loc': len(for_dispatch), 'total_weight': total_weight})    
+
+    return render(request, 'order/dispatch.html', {'for_dispatch': for_dispatch, 'in_queue': in_queue, 'total_loc': len(for_dispatch), 'total_weight': total_weight})

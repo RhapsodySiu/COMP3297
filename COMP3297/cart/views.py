@@ -1,5 +1,6 @@
 from django.shortcuts import render, redirect, get_object_or_404
 from django.views.decorators.http import require_POST
+from django.contrib.auth.decorators import login_required
 from order.models import MedicalSupply
 from .cart import Cart
 from .forms import CartAddSupplyForm
@@ -18,7 +19,8 @@ def cart_remove(request, supply_id):
     supply = get_object_or_404(MedicalSupply, id=supply_id)
     cart.remove(supply)
     return redirect('cart:cart_detail')
-    
+
+@login_required
 def cart_detail(request):
     cart = Cart(request)
     for item in cart:

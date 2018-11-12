@@ -1,0 +1,82 @@
+{% extends "base.html" %}
+{% load static %}
+{% block menu %} {% include "menu.html" %} {% endblock %}
+
+{% block title %} Dispatch order {% endblock %}
+
+{% block content %}
+	<h3 class="mb-3">Order record</h3>
+	<p>{{test}}</p>
+	<h5>Orders to be loaded to the next available drone</h5>
+	<form action="{% url 'dispatch:download_itinerary' %}" method="get">
+	  {% for order in for_dispatch %}
+	    <input type="hidden" name="order" value="{{order.id}}">
+	  {% endfor %}
+	<button type="submit" class="btn btn-primary mb-3" id="generate">Generate drone itinerary</button>
+	</form>
+    <form action="{% url 'dispatch:mark_dispatched' %}" method="get">
+        {% for order in for_dispatch %}
+	       <input type="hidden" name="order" value="{{order.id}}">
+        {% endfor %}
+	<button class="btn btn-info mb-3 ml-2" type="submit" id="dispatched">Mark these orders as dispatched</button>
+    </form>
+	<table class="table">
+		<thead>
+			<tr>
+			<th>Order ID</th>
+			<th>Priority</th>
+			<th>Clinic</th>
+			<th>Total shipping weight</th>
+			</tr>
+		</thead>
+		<tbody>
+			{% for order in for_dispatch %}
+				<tr>
+				<td>{{order.id}}</td>
+				<td>{{order.priority}}</td>
+				<td>{{order.clinic.name}}</td>
+				<td>{{order.get_total_weight}} kg</td>
+				</tr>
+			{% endfor %}
+			<tr><td colspan=2></td><td>{{total_loc}} Destination(s)</td><td>{{total_weight}} kg</td></tr>
+		</tbody>
+		</table>
+		<div></div>
+		<h5>Queued for dispatch</h5>
+		<table class="table">
+			<thead>
+			<tr>
+				<th>Order ID</th>
+				<th>Priority</th>
+				<th>Order time</th>
+				<th>Clinic</th>
+				<th>Summary</th>
+				<th>Action</th>
+			</tr>
+			</thead>
+			<tbody>
+				{% for order in in_queue %}
+					<tr>
+						<td>{{order.id}}</td>
+						<td>{{order.priority}}</td>
+						<td>
+							{% if order.status.label == 'Order' %}
+								{{order.order_time}}
+							{% elif order.status.label == 'Processing' %}
+								{{order.processing_time}}
+							{% elif order.status.label == 'Processed' %}
+								{{order.processed_time}}
+							{% elif order.status.label == 'Dispatched' %}
+								{{order.dispatched_time}}
+							{% else %}
+								{{order.delivered_time}}
+							{% endif %}
+						</td>
+						<td>{{order.clinic}}</td>
+						<td>{{order.get_total_weight}} kg</td>
+						<td><a class="btn btn-info" href="{% url 'order:order_detail' order.id %}">View</a></td>
+					</tr>
+				{% endfor %}
+			</tbody>
+	</table>
+{% endblock %}

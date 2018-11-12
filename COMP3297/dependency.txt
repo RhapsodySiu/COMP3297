@@ -1,0 +1,7 @@
+pandas
+numpy
+more-itertools
+pulp
+tsp
+django-enumfields
+Pillow

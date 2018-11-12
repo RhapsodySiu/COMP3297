@@ -45,6 +45,24 @@ class Hospital(Location):
     def __str__(self):
         return self.name
 
+class DistanceClinic(models.Model):
+    a = models.ForeignKey(Clinic, related_name="clinicA", on_delete=models.CASCADE)
+    b = models.ForeignKey(Clinic, related_name="clinicB", on_delete=models.CASCADE)
+    distance = models.DecimalField(max_digits=5, decimal_places=2)
+    class Meta:
+        unique_together = (("a", "b"),)
+    def __str__(self):
+        return str(self.distance) + "km" + ": " + self.a.name + " and " + self.b.name 
+
+class DistanceClinicHospital(models.Model):
+    a = models.ForeignKey(Hospital, related_name="hospital", on_delete=models.CASCADE)
+    b = models.ForeignKey(Clinic, related_name="clinic", on_delete=models.CASCADE)
+    distance = models.DecimalField(max_digits=5, decimal_places=2)
+    class Meta:
+        unique_together = (("a", "b"),)
+    def __str__(self):
+        return str(self.distance) + "m" + ": " + self.a.name + " and " + self.b.name 
+
 # enum field, in filter: m = MyModel.objects.filter(priority=priority.HIGH), in form: priority = EnumIntegerField(...).formField()
 class Priority(Enum):
     HIGH = 1
@@ -52,11 +70,10 @@ class Priority(Enum):
     LOW = 3
 
 class Status(Enum):
-    order = 1
-    processing = 2
-    processed = 3
-    dispatched = 4
-    delivered = 5
+    ordered = 1
+    processed = 2
+    dispatched = 3
+    delivered = 4
 
 class Order(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
@@ -70,11 +87,13 @@ class Order(models.Model):
     delivered_time = models.DateTimeField(null=True, blank=True)
     status = EnumIntegerField(Status, default = 1)
     class Meta:
-        ordering = ('order_time','priority',)
+        ordering = ('priority','order_time',)
     def __str__(self):
         return 'Order {}'.format(self.id)
+    def get_item_no(self): 
+        return len(self.items.all())
     def get_total_weight(self):
-        return float(sum(item.get_weight() for item in self.items.all())) + 1.2
+        return round(float(sum(item.get_weight() for item in self.items.all())) + 1.2, 2)
 
 class OrderContent(models.Model):
     order = models.ForeignKey(Order, related_name='items', on_delete=models.CASCADE)

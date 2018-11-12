@@ -6,4 +6,4 @@ class OrderCreateForm(forms.ModelForm):
         model = Order
         fields = ['priority']
         # set these values in view
-        exclue = ['order_by', 'clinic']
+        exclude = ['order_by', 'clinic']
