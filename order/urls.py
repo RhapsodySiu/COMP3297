@@ -12,5 +12,6 @@ urlpatterns = [
     path('make/', views.order_create, name="order_create"),
     path('detail/<uuid:order_id>/', views.order_detail, name="order_detail"),
     path('cancel/<uuid:order_id>/', views.cancel_order, name="cancel_order"),
+    path('delivered/<uuid:order_id>/', views.mark_delivered, name="mark_delivered"),
     url(r'^test/$', views.test_view, name='test_view'),
 ]

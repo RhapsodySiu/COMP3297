@@ -13,6 +13,7 @@ from django.contrib.auth.models import User, Group
 from .forms import OrderCreateForm
 from cart.forms import CartAddSupplyForm
 from cart.cart import Cart
+from datetime import datetime
 
 # Can use userId and User filter to find which group does the current user belong to
 def test_view(request):
@@ -112,6 +113,17 @@ def cancel_order(request, order_id):
     return redirect("order:order_history")
 
 @login_required
+def mark_delivered(request, order_id):
+    order = Order.objects.get(id=order_id)
+    order.status=5
+    order.delivered_time = datetime.now()
+    order.save()
+    return redirect("order:order_history")
+
+
+
+
+@login_required
 def order_dispatch(request):
     # order_list = Order.objects.filter(order_by=request.user)
     order_list = list(Order.objects.filter(order_by=request.user))
@@ -154,5 +166,5 @@ def order_dispatch(request):
                     in_queue.remove(order)
                     for_dispatch.append(order)
                     total_weight = total_weight + order.get_total_weight()
-        
-    return render(request, 'order/dispatch.html', {'for_dispatch': for_dispatch, 'in_queue': in_queue, 'total_loc': len(for_dispatch), 'total_weight': total_weight})    
+
+    return render(request, 'order/dispatch.html', {'for_dispatch': for_dispatch, 'in_queue': in_queue, 'total_loc': len(for_dispatch), 'total_weight': total_weight})

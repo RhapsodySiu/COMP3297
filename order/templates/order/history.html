@@ -40,9 +40,12 @@
 			{% if order.status.label == "Order" %}
 		    <a href="{% url 'order:cancel_order' order.id %}" class="btn btn-warning btn-sm">Cancel</a>
 			{% endif %}
+      {% if order.status.label == "Dispatched" %}
+        <a href="{% url 'order:mark_delivered' order.id %}" class="btn btn-success btn-sm">Delivered</a>
+      {% endif %}
 		  </td>
 		</tr>
 	  {% endfor %}
   </table>
-  
+
 {% endblock %}
