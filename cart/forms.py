@@ -1,6 +1,6 @@
 from django import forms
 
-SUPPLIES_QUANTITY_CHOICE = [(i, str(i)) for i in range(1, 21)]
+SUPPLIES_QUANTITY_CHOICE = [(i, str(i)) for i in range(1, 99)]
 
 class CartAddSupplyForm(forms.Form):
     quantity = forms.TypedChoiceField(choices=SUPPLIES_QUANTITY_CHOICE, coerce=int)

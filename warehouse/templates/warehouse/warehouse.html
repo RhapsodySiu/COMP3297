@@ -1,0 +1,80 @@
+{% extends "base.html" %}
+{% load static %}
+{% block menu %} {% include "menu.html" %} {% endblock %}
+
+{% block title %} Dispatch order {% endblock %}
+
+{% block content %}
+    <h3 class="mb-3 mt-3">Order record</h3>
+    <h5>Queued for processing</h5>
+    <table class="table">
+        <thead>
+            <tr>
+            <th>Order ID</th>
+            <th>Priority</th>
+            <th>Order time</th>
+            <th>Clinic</th>
+            <th>Summary</th>
+            <th colspan=2>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in for_processing %}
+            <tr>
+            <td>{{order.id}}</td>
+            <td>{{order.priority}}</td>
+            <td>{{order.order_time}}</td>
+            <td>{{order.clinic}}</td>
+            <td>{{order.get_total_weight}} kg, {{order.get_item_no}} item(s)</td>
+            <td><a class="btn btn-info" href="{% url 'order:order_detail' order.id %}">View</a></td>
+            <td>
+                {% if forloop.first %}  
+                    <form action="{% url 'warehouse:processOrder' %}" method="get">
+                        <input type="hidden" name="order" value="{{order.id}}">
+                        <button class="ml-1 btn btn-primary">Process</button>
+                    </form>
+                {% endif %}
+            </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+    <hr>
+    <h5>Processing by Warehouse</h5>
+    <table class="table">
+        <thead>
+            <tr>
+            <th>Order ID</th>
+            <th>Priority</th>
+            <th>Order time</th>
+            <th>Clinic</th>
+            <th>Summary</th>
+            <th colspan=2>Action</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for order in for_dispatch %}
+            <tr>
+            <td>{{order.id}}</td>
+            <td>{{order.priority}}</td>
+            <td>{{order.order_time}}</td>
+            <td>{{order.clinic}}</td>
+            <td>{{order.get_total_weight}} kg, {{order.get_item_no}} item(s)</td>
+            <td><a class="btn btn-info" href="{% url 'order:order_detail' order.id %}">View</a></td>
+            <td>
+                <form action="{% url 'warehouse:queueForDispatch' %}" method="get">
+                        <input type="hidden" name="order" value="{{order.id}}">
+                        <button class="ml-1 btn btn-primary">Queue for Dispatch</button>
+                </form>
+            </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+
+    <script>
+    $("a.btn-warning").click(function() {
+        alert("The order is canceled");
+    });
+    </script>
+{% endblock %}

@@ -74,7 +74,8 @@ def generate_itinerary(dispatch_list):
     return {'name': name, 'latitude': latitude, 'longitude': longitude, 'altitude':altitude}
 
 def order_dispatch(request):
-    order_list = list(Order.objects.filter(order_by=request.user).exclude(status=4).exclude(status=5))
+    status = [1,2,4,5]
+    order_list = list(Order.objects.filter(order_by=request.user).exclude(status__in=status))
     for_dispatch = []
     in_queue = []
     med = []

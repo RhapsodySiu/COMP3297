@@ -14,6 +14,7 @@ from .forms import OrderCreateForm
 from cart.forms import CartAddSupplyForm
 from cart.cart import Cart
 from datetime import datetime
+from random import randint
 
 # Can use userId and User filter to find which group does the current user belong to
 def test_view(request):
@@ -62,9 +63,8 @@ def search_view(request):
     return render(request,'order/supplies/browse.html', {'page': page, 'supplies': supplies, 'cart_supply_form': cart_supply_form})
 
 @login_required
-def category_view(request):
-    query = request.GET.get('q')
-    object_list = MedicalSupply.objects.filter(type=query)
+def category_view(request, category):
+    object_list = MedicalSupply.objects.filter(type__id=category)
     paginator = Paginator(object_list, 15)
     page = request.GET.get('page')
     cart_supply_form = CartAddSupplyForm()
@@ -86,6 +86,8 @@ def order_create(request):
             order.order_by = request.user
             served = ClinicManager.objects.get(user=request.user)
             order.clinic = served.clinic
+            acronym = "".join(e[0] for e in served.clinic.name.split())
+            order.id = acronym + datetime.now().strftime("%Y%m%d-%f")
             order.save()
             for item in cart:
                 OrderContent.objects.create(order=order, medical_supply=item['supply'],weight=item['weight'], quantity=item['quantity'])
@@ -97,7 +99,7 @@ def order_create(request):
 
 @login_required
 def order_history(request):
-    order_list = Order.objects.filter(order_by=request.user)
+    order_list = Order.objects.filter(order_by=request.user).order_by('-order_time')
     return render(request, 'order/history.html', {'orders': order_list})
 
 @login_required

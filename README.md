@@ -4,7 +4,7 @@ Air Supply Pilot
 ## Current stage
 Construction
 
-update 10/11/2018
+update 13/11/2018
 ## To-do list
 + **Registration and Authentication** (坤)
   * Enable sending registration token through email
@@ -13,14 +13,19 @@ update 10/11/2018
   * Limit different groups of users to use their own functions
 + **Warehouse order** (Clarissa)
   * Print shipping label
-  * Show all orders waiting for processing
-  * Allow warehouse personel to change order status to processing, then waiting for dispatch
-  * Mark the timestamp
+  * ~~Show all orders waiting for processing~~
+  * ~~Allow warehouse personel to change order status to processing, then waiting for dispatch~~
+  * ~~Mark the timestamp~~
 + **Delivery notification** (Michael)
-  * Allow clinic manager to confirm the arrival of order
-  * Mark the timestamp
+  * ~~Allow clinic manager to confirm the arrival of order~~
+  * ~~Mark the timestamp~~
 + **Misc** (Siu?)
-  * shorten order id length
+  * ~~shorten order id length~~ **Please update the table using `python manage.py migrate --run-syncdb`, or simply drop the order table**
+  * ~~update status label~~ Please stick with `status.value` to do conditional branch instead
+  * ~~weight constraint~~ Clinic manager cannot proceed if overweight
+  * update use case, glossary
+  * more testing on itinerary
+  * ~~sorting order based on priority~~
 
 ## Document
 + **Sprint backlog**

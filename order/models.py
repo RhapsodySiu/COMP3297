@@ -75,9 +75,15 @@ class Status(Enum):
     processed = 3
     dispatched = 4
     delivered = 5
+    class Labels:
+        order = 'Queued for processing'
+        processing = 'Processing by warehouse'
+        processed = 'Queued for dispatch'
+        dispatch = 'Dispatch'
+        delivered = 'Delivered'
 
 class Order(models.Model):
-    id = models.UUIDField(primary_key=True, default=uuid.uuid4, editable=False)
+    id = models.CharField(max_length=50, primary_key=True, editable=False)
     order_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=None)
     priority = EnumIntegerField(Priority, default= 3)
     clinic = models.ForeignKey(Clinic, on_delete=models.CASCADE, default=None)
@@ -88,7 +94,7 @@ class Order(models.Model):
     delivered_time = models.DateTimeField(null=True, blank=True)
     status = EnumIntegerField(Status, default = 1)
     class Meta:
-        ordering = ('order_time','priority',)
+        ordering = ('priority','order_time')
     def __str__(self):
         return 'Order {}'.format(self.id)
     def get_total_weight(self):
@@ -108,4 +114,3 @@ class Group(models.Model):
     name = models.CharField(max_length=50)
     def __str__(self):
         return self.name
-    

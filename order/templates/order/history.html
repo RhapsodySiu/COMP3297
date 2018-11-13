@@ -20,16 +20,18 @@
       {% for order in orders %}
 	    <tr>
 		  <td>
-		  {% if order.status.label == 'Order' %}
+		  {% if order.status.value == 1 %}
 		    {{order.order_time}}
-		  {% elif order.status.label == 'Processing' %}
+		  {% elif order.status.value == 2 %}
 		    {{order.processing_time}}
-		  {% elif order.status.label == 'Processed' %}
+		  {% elif order.status.value == 3 %}
 		    {{order.processed_time}}
-		  {% elif order.status.label == 'Dispatched' %}
+		  {% elif order.status.value == 4 %}
 		    {{order.dispatched_time}}
-		  {% else %}
+		  {% elif order.status.value == 5 %}
 		    {{order.delivered_time}}
+		  {% else %}
+		     Not identified
 		  {% endif %}
 		  </td>
 		  <td>{{order.id}}</td>
@@ -37,10 +39,10 @@
 		  <td>{{order.status.label}}</td>
 		  <td>
 		    <a href="{% url 'order:order_detail' order.id %}" class="btn btn-info btn-sm mr-2">Detail</a>
-			{% if order.status.label == "Order" %}
+			{% if order.status.value == 1 %}
 		    <a href="{% url 'order:cancel_order' order.id %}" class="btn btn-warning btn-sm">Cancel</a>
 			{% endif %}
-      {% if order.status.label == "Dispatched" %}
+      {% if order.status.value == 4 %}
         <a href="{% url 'order:mark_delivered' order.id %}" class="btn btn-success btn-sm">Delivered</a>
       {% endif %}
 		  </td>

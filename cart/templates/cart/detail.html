@@ -54,8 +54,14 @@
       </tr>
   </table>
   <p class="text-right">
+  {% if cart.get_total_weight < 25 %}
     <a href="{% url 'order:supply_list' %}" class="btn btn-default">Continue ordering</a>
     <a href="{% url 'order:order_create' %}" class="btn btn-primary">Make order</a>
+  {% else %}
+    <div class="alert alert-warning" role="alert">
+	  Order weight exists 25kg, overweight occurs - Please consider removing some items before proceeding to order.
+	</div>
+  {% endif %}
   </p>
   
 {% endblock %}
