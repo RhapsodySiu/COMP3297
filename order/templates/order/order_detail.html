@@ -6,7 +6,8 @@
 {% block title %} Order detail {% endblock %}
 
 {% block content %}
-  <a href="{% url 'order:order_history' %}" class="m-3 btn btn-primary">Back</a>
+  <!-- <a href="{% url 'order:order_history' %}" class="m-3 btn btn-primary">Back</a> -->
+  <a href="{% url 'warehouse:getShippingLabel' order.id %}" class="m-3 btn btn-primary">Generate Shipping Label</a>
   <h1>Order detail</h1>
   <ul>
     <li>Order id: <span>{{order.id}}</span></li>

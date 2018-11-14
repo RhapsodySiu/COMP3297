@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from order.models import Order, DistanceClinicHospital, DistanceClinic
+from order.models import Order, DistanceClinicHospital, DistanceClinic, MedicalSupply, OrderContent
 from django.http import HttpResponse, JsonResponse, FileResponse
 # Pagination
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -79,20 +79,33 @@ def getShippingLabel(request, order_id):
     barcode_value = order_id
     
     barcode39 = code39.Extended39(barcode_value)
-    barcode39Std = code39.Standard39(barcode_value, barHeight=20, stop=1)
-    barcode93 = code93.Standard93(barcode_value)
-    barcode128 = code128.Code128(barcode_value)
-    barcode_usps = usps.POSTNET("50158-9999")
+    # barcode39Std = code39.Standard39(barcode_value, barHeight=20, stop=1)
+    # barcode93 = code93.Standard93(barcode_value)
+    # barcode128 = code128.Code128(barcode_value)
+    # barcode_usps = usps.POSTNET("50158-9999")
     
-    codes = [barcode39, barcode39Std, barcode93, barcode128, barcode_usps]
-    x = 65*mm
-    y = 225*mm
-    p.drawString(10*mm, 260*mm, "Shipping label for " + order_id)
-    for code in codes:
-        code.drawOn(p, x, y)
-        y = y - 5*mm
-        p.drawString(x+10*mm, y, order_id)
-        y = y - 40*mm
+    # codes = [barcode39, barcode39Std, barcode93, barcode128, barcode_usps]
+    # x = 65*mm
+    # y = 225*mm
+    p.drawString(10*mm, 260*mm, "Order ID: " + order_id)
+    barcode39.drawOn(p, 10*mm, 235*mm)
+    # for code in codes:
+    #     code.drawOn(p, x, y)
+    #     y = y - 5*mm
+    #     p.drawString(x+10*mm, y, order_id)
+    #     y = y - 40*mm
+
+    # get the information of the order
+    overview = get_object_or_404(Order, id=order_id)
+    order_detail = OrderContent.objects.filter(order=overview)
+
+    p.drawString(10*mm, 220*mm, "Destination (Clinic): " + str(overview.clinic))
+    p.drawString(10*mm, 210*mm, "Items (" + str(overview.get_total_weight()) + " kg): ")
+    x = 10*mm
+    y = 205*mm
+    for item in order_detail:
+        p.drawString(x, y, "(Type: " + str(item.medical_supply.type) + ") " + str(item.medical_supply.description) + ": " +  str(item.quantity) + " X " + str(item.medical_supply.weight) + " kg = " + str(item.quantity * item.medical_supply.weight) + " kg")
+        y -= 5*mm
 
     # Close the PDF object cleanly, and we're done.
     p.showPage()

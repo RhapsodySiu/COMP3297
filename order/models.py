@@ -97,6 +97,8 @@ class Order(models.Model):
         ordering = ('priority','order_time')
     def __str__(self):
         return 'Order {}'.format(self.id)
+    def get_item_no(self):
+        return len(self.items.all())
     def get_total_weight(self):
         return round(float(sum(item.get_weight() for item in self.items.all())) + 1.2, 2)
 
