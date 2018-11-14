@@ -19,7 +19,7 @@ update 13/11/2018
   * Allow clinic manager to input their clinic in registration
   * Limit different groups of users to use their own functions
 + **Warehouse order** (Clarissa)
-  * Print shipping label
+  * ~~Print shipping label~~
   * ~~Show all orders waiting for processing~~
   * ~~Allow warehouse personel to change order status to processing, then waiting for dispatch~~
   * ~~Mark the timestamp~~
@@ -30,7 +30,7 @@ update 13/11/2018
   * ~~shorten order id length~~ **Please update the table using `python manage.py migrate --run-syncdb`, or simply drop the order table**
   * ~~update status label~~ Please stick with `status.value` to do conditional branch instead
   * ~~weight constraint~~ Clinic manager cannot proceed if overweight
-  * update use case, glossary
+  * ~~update use case, glossary~~
   * more testing on itinerary
   * ~~sorting order based on priority~~
 
