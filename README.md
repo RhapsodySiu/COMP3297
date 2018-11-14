@@ -1,6 +1,13 @@
 # COMP3297
 Air Supply Pilot
 
+## Dependencies
+pip install django
+pip install django-enumfields
+pip install reportlab
+pip install tsp
+pip install numpy
+
 ## Current stage
 Construction
 
