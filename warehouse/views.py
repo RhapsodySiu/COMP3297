@@ -40,7 +40,7 @@ def order_warehouse(request):
             for_processing.append(order)
         elif order.status.value == 2:
             for_dispatch.append(order)
-    return render(request, 'warehouse/warehouse.html', {'for_processing': for_processing, 'for_dispatch': for_dispatch})
+    return render(request, 'warehouse/warehouse.html', {'for_processing': for_processing, 'for_dispatch': for_dispatch, 'role': str(request.user.groups.all()[0].name)})
 
 @login_required
 def processOrder(request):

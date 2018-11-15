@@ -102,7 +102,7 @@ def doRegistration(request):
 @login_required
 def generateToken(request):
     generate_token_form = TokenGenerationForm()
-    return render(request, 'account/generateToken.html', {'TokenGenerationForm': generate_token_form})
+    return render(request, 'account/generateToken.html', {'TokenGenerationForm': generate_token_form, 'role': str(request.user.groups.all()[0].name)})
 
 @login_required
 def doTokenGeneration(request):
@@ -153,4 +153,4 @@ def doTokenGeneration(request):
 @login_required
 def dashboard(request):
     #set section to track where the user is watching
-    return render(request, 'account/dashboard.html', {'section': 'dashboard'})
+    return render(request, 'account/dashboard.html', {'section': 'dashboard', 'role': str(request.user.groups.all()[0].name)})

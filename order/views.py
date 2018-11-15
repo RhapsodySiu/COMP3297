@@ -45,7 +45,7 @@ def supply_list(request):
         supplies = paginator.page(1)
     except EmptyPage:
         supplies = paginator.page(paginator.num_pages)
-    return render(request,'order/supplies/browse.html', {'page': page, 'supplies': supplies, 'cart_supply_form': cart_supply_form})
+    return render(request,'order/supplies/browse.html', {'page': page, 'supplies': supplies, 'cart_supply_form': cart_supply_form, 'role': str(request.user.groups.all()[0].name)})
 
 @login_required
 def search_view(request):
@@ -60,7 +60,7 @@ def search_view(request):
         supplies = paginator.page(1)
     except EmptyPage:
         supplies = paginator.page(paginator.num_pages)
-    return render(request,'order/supplies/browse.html', {'page': page, 'supplies': supplies, 'cart_supply_form': cart_supply_form})
+    return render(request,'order/supplies/browse.html', {'page': page, 'supplies': supplies, 'cart_supply_form': cart_supply_form, 'role': str(request.user.groups.all()[0].name)})
 
 @login_required
 def category_view(request, category):
@@ -74,7 +74,7 @@ def category_view(request, category):
         supplies = paginator.page(1)
     except EmptyPage:
         supplies = paginator.page(paginator.num_pages)
-    return render(request,'order/supplies/browse.html', {'page': page, 'supplies': supplies, 'cart_supply_form': cart_supply_form})
+    return render(request,'order/supplies/browse.html', {'page': page, 'supplies': supplies, 'cart_supply_form': cart_supply_form, 'role': str(request.user.groups.all()[0].name)})
 
 @login_required
 def order_create(request):
@@ -92,22 +92,22 @@ def order_create(request):
             for item in cart:
                 OrderContent.objects.create(order=order, medical_supply=item['supply'],weight=item['weight'], quantity=item['quantity'])
             cart.clear()
-            return render(request, 'order/confirm.html',{'order': order})
+            return render(request, 'order/confirm.html',{'order': order, 'role': str(request.user.groups.all()[0].name)})
     else:
         form = OrderCreateForm()
-    return render(request, 'order/make.html', {'cart': cart, 'form':form})
+    return render(request, 'order/make.html', {'cart': cart, 'form':form, 'role': str(request.user.groups.all()[0].name)})
 
 @login_required
 def order_history(request):
     order_list = Order.objects.filter(order_by=request.user).order_by('-order_time')
-    return render(request, 'order/history.html', {'orders': order_list})
+    return render(request, 'order/history.html', {'orders': order_list, 'role': str(request.user.groups.all()[0].name)})
 
 @login_required
 def order_detail(request, order_id):
     overview = get_object_or_404(Order, id=order_id)
     order_detail = OrderContent.objects.filter(order=overview)
     weight = overview.get_total_weight()
-    return render(request, 'order/order_detail.html', {'order': overview, 'content': order_detail, 'weight': weight})
+    return render(request, 'order/order_detail.html', {'order': overview, 'content': order_detail, 'weight': weight, 'role': str(request.user.groups.all()[0].name)})
 
 @login_required
 def cancel_order(request, order_id):
@@ -169,4 +169,4 @@ def order_dispatch(request):
                     for_dispatch.append(order)
                     total_weight = total_weight + order.get_total_weight()
 
-    return render(request, 'order/dispatch.html', {'for_dispatch': for_dispatch, 'in_queue': in_queue, 'total_loc': len(for_dispatch), 'total_weight': total_weight})
+    return render(request, 'order/dispatch.html', {'for_dispatch': for_dispatch, 'in_queue': in_queue, 'total_loc': len(for_dispatch), 'total_weight': total_weight, 'role': str(request.user.groups.all()[0].name)})

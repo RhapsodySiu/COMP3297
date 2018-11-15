@@ -116,7 +116,7 @@ def order_dispatch(request):
                     for_dispatch.append(order)
                     total_weight = total_weight + order.get_total_weight()
 
-    return render(request, 'dispatch/dispatch.html', {'for_dispatch': for_dispatch, 'in_queue': in_queue, 'total_loc': len(for_dispatch), 'total_weight': total_weight})
+    return render(request, 'dispatch/dispatch.html', {'for_dispatch': for_dispatch, 'in_queue': in_queue, 'total_loc': len(for_dispatch), 'total_weight': total_weight, 'role': str(request.user.groups.all()[0].name)})
 
 def download_itinerary(request):
     orders = request.GET.getlist('order')

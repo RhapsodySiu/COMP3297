@@ -1,6 +1,7 @@
 <nav class="navbar navbar-expand-sm bg-light navbar-light">
   <a class="nav-brand" href="{% url 'dashboard' %}">Air Supply Pilot System</a>
   <ul class="navbar-nav">
+      {% if role == "Clinic Manager" %}
     <li class="nav-item">
       <a class="nav-link" href="{% url 'order:supply_list' %}">Browse supplies</a>
     </li>
@@ -10,12 +11,17 @@
     <li class="nav-item">
       <a class="nav-link" href="{% url 'order:order_history' %}">View order</a>
     </li>
+     {% endif %}
+     {% if role == "Warehouse Personnel" %}
     <li class="nav-item">
       <a class="nav-link" href="{% url 'warehouse:order_warehouse' %}">Process order</a>
     </li>
+      {% endif %}
+      {% if role == "Dispatcher" %}
     <li class="nav-item">
       <a class="nav-link" href="{% url 'dispatch:order_dispatch' %}">Dispatch order</a>
     </li>
+      {% endif %}
     <li class="nav-item">
       <a class="nav-link" href="{% url 'token_generation' %}">Generate Token</a>
     </li>
