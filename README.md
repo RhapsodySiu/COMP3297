@@ -7,6 +7,10 @@ Air Supply Pilot
 + pip install reportlab
 + pip install tsp
 + pip install numpy
++ pip install pandas
++ pip install more-itertools
++ pip install pulp
++ pip install Pillow
 
 ## Current stage
 Construction

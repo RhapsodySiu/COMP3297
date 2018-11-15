@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Token Generation{% endblock %}
+
+{% block menu %} {% include "menu.html" %} {% endblock %}
+
+{% block content %}
+  <h1>Generate and Send the Token</h1>
+  <hr>
+  <p>Fill in the following information</p>
+  <form class="form-group" action="{% url 'doTokenGeneration' %}" method="post">
+    {{ TokenGenerationForm.as_p }}
+    {% csrf_token %}
+    <p><input class="btn btn-primary" type="submit" value="Generate and Send the token"></p>
+  </form>
+{% endblock %}

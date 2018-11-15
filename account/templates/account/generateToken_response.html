@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block title %}Token Generation{% endblock %}
+
+{% block content %}
+    <h1>Message:</h1>
+  <h3>{{ message }}</h3>
+    <br><a class="btn btn-primary" href="{% url 'token_generation' %}">Click here to return to the previous page</a>
+{% endblock %}
