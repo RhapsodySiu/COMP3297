@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+
+{% block title %}Create an account{% endblock %}
+
+{% block content %}
+    <h1>Message:</h1>
+  <h3>{{ message }}</h3>
+    <br><a class="btn btn-primary" href="{% url 'register' token %}">Click here to return to the previous page</a>
+{% endblock %}

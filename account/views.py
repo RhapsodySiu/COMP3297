@@ -8,9 +8,10 @@ from enumfields import Enum
 from django.http import HttpResponse
 from django.shortcuts import render
 from django.contrib.auth import authenticate, login
-from django.contrib.auth.models import User
+from django.contrib.auth.models import User, Group
 from .forms import LoginForm, RegistrationForm, TokenGenerationForm, RegistrationFormForCM
-from .models import Token
+from .models import Token, Role, ClinicManager
+from order.models import Clinic
 from django.contrib.auth.decorators import login_required
 from django.template.context_processors import csrf
 
@@ -46,7 +47,57 @@ def register(request, tokenFromURL):
     return render(request, 'account/register.html', {'user_form': registration_form})
 
 def doRegistration(request):
-    return
+    
+    if Token.objects.filter(token=request.POST.get("token")).count() == 0:
+        return HttpResponse(status=404)
+    
+    token = Token.objects.get(token=request.POST.get("token"))
+    
+    if token.isUsed == True:
+        return HttpResponse(status=404)
+    
+    tokenRole = str(token.role)
+    
+    if tokenRole == "Clinic Manager":
+        registrationForm = RegistrationFormForCM(request.POST)
+    else:
+        registrationForm = RegistrationForm(request.POST)
+        
+
+    
+    if registrationForm.is_valid():
+        
+        # Check if password matches
+        if registrationForm.cleaned_data['password'] != registrationForm.cleaned_data['password2']:
+            Message = "The password does not match."
+            return render(request, 'account/register_error.html', {'message': Message, 'token': registrationForm.cleaned_data['token']})
+        
+        NewUser = registrationForm.save(commit=False)
+        NewUser.set_password(registrationForm.cleaned_data['password'])
+        NewUser.save()
+        
+        # Add the user to the corresponding group
+        NewUserGroup = Group.objects.get(name=tokenRole)
+        NewUser.groups.set([NewUserGroup])
+        
+        # If the user is clinic manager, add a mapping between User and Clinic
+        if tokenRole == "Clinic Manager":
+            ClinicOfCM = Clinic.objects.get(id=registrationForm.cleaned_data['clinic']) 
+            NewClinicManager = ClinicManager()
+            NewClinicManager.user = NewUser
+            NewClinicManager.clinic = ClinicOfCM
+            NewClinicManager.save()
+        
+        # Mark the token as used.
+        token.isUsed = True
+        token.save()
+        return render(request, 'account/register_done.html', {'new_user': NewUser})
+    else:
+        # In this case, probably the username has been used by others
+        Message = "Some information is missing or the username has been used by others."
+        return render(request, 'account/register_error.html', {'message': Message, 'token': registrationForm.cleaned_data['token']})
+    
+    
 
 @login_required
 def generateToken(request):
@@ -93,9 +144,9 @@ def doTokenGeneration(request):
         except SMTPException:
             print("Failed to send email")
             
-        Message = "Successful"
+        Message = "Successful."
     else:
-        Message = "Error"
+        Message = "Error."
     return render(request, 'account/generateToken_response.html', {'message': Message})
 
 # the dashboard
