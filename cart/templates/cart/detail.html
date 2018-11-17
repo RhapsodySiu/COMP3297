@@ -23,7 +23,7 @@
         <td>Action</td>
       </tr>
       </thead>
-    
+    {% if  cart.get_total_weight > 1.2 %}
       {% for item in cart %}
         {% with supply=item.supply %}
           <tr>
@@ -63,5 +63,11 @@
 	</div>
   {% endif %}
   </p>
+  {% else %}
+  <div class="alert alert-info" role="alert">
+	  No item is added to the order
+	</div>
+  {% endif %}
+  
   
 {% endblock %}

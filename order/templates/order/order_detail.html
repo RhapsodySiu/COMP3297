@@ -6,14 +6,23 @@
 {% block title %} Order detail {% endblock %}
 
 {% block content %}
-  <!-- <a href="{% url 'order:order_history' %}" class="m-3 btn btn-primary">Back</a> -->
-  <a href="{% url 'warehouse:getShippingLabel' order.id %}" class="m-3 btn btn-primary">Generate Shipping Label</a>
+{% if role == 'Warehouse Personnel' %}
+  <a href="{% url 'warehouse:order_warehouse' %}" class="m-3 btn btn-primary">Back</a>
+{% elif role == 'Dispatcher' %}
+  <a href="{% url 'dispatch:order_dispatch' %}" class="m-3 btn btn-primary">Back</a>
+{% else %}
+  <a href="{% url 'order:order_history' %}" class="m-3 btn btn-primary">Back</a>
+{% endif %}
+
+{% if order.status.value == 2 %}
+  <a href="{% url 'warehouse:getShippingLabel' order.id %}" class="m-3 btn btn-info">Generate shipping label</a>
+{% endif %}
   <h1>Order detail</h1>
   <ul>
     <li>Order id: <span>{{order.id}}</span></li>
     <li>Clinic: {{order.clinic}}</li>
     <li>Priority: {{order.priority}}</li>
-    <li>Status: {{order.status}}</li>
+    <li>Status: {% if order.status.value == 3 %}Queued for dispatch{% elif order.status.value == 4 %}Dispatched{% else %}{{order.status}}{% endif %}</li>
     <li>Order time: {% if not order.order_time %}-{% else %}{{order.order_time}}{%endif%}</li>
     <li>Processing time: {% if not order.processing_time %}-{% else %}{{order.processing_time}}{%endif%}</li>
     <li>Processed time: {% if not order.processed_time %}-{% else %}{{order.processed_time}}{%endif%}</li>

@@ -12,33 +12,49 @@
       <button class="col-2 btn btn-primary btn-sm ml-2">Search</button>
     </form>
   </div>
-  <div class="d-flex justify-content-around row mt-4">
+  <div class="justify-content-center mt-4">
   {% if supplies %}
+  <table class="table">
+  <th><tr>
+  <td>Type</td>
+  <td>Image</td>
+  <td>Description</td>
+  <td>Weight</td>
+  <td>Action</td>
+  </tr></th>
   {% for supply in supplies %}
-    <div class="m-1 card col-12 col-md-4 col-lg-2">
-      <img class="card-img-top" src="{{ supply.img.url }}" alt="Card image cap">
-      <div class="card-body">
-        <h5 class="card-title">{{ supply.description }}
-          <span class="badge badge-secondary">{{ supply.type.name }}</span>
-        </h5>
-        <p class="card-text">{{ supply.weight }}kg</p>
-        <form class="form-group m-3" action="{% url "cart:cart_add" supply.id %}" method="post">
-            {{ cart_supply_form }}
-            {% csrf_token %}
-            <input class="btn btn-primary m-3" type="submit" value="Add">
-          </form>
-      </div>
-    </div>
-    {% if forloop.counter|divisibleby:4 %}{% endif %}
+  <tr>
+ 
+  <form class=" m-3" action="{% url "cart:cart_add" supply.id %}" method="post">
+    <td>
+      <span class="badge badge-secondary">{{ supply.type.name }}</span>
+    </td>
+    <td>
+      <img src="{{ supply.img.url }}" height="100" width="100" alt="{{ supply.description }}">
+    </td>
+    <td>
+      {{ supply.description }}
+    </td>
+    <td>
+      {{ supply.weight }}kg
+    </td>
+    <td>
+        <input class="btn btn-primary m-3" type="submit" value="Add"/>
+    </td>
+	{{ cart_supply_form }}
+        {% csrf_token %}
+	</form>
+  </tr>
   {% endfor %}
   {% else %}
     <div class="alert alert-info" role="alert">
-	  Supply not found
-	</div>
+      Supply not found
+    </div>
   {% endif %}
+  </table>
   </div>
   
-  <div class="row justify-content-center">
+  <div class="row justify-content-center mb-4 mt-3">
     {% include "pagination.html" with page=supplies %}
   </div>
 {% endblock %}

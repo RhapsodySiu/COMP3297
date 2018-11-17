@@ -99,8 +99,12 @@ def order_create(request):
 
 @login_required
 def order_history(request):
-    order_list = Order.objects.filter(order_by=request.user).order_by('-order_time')
-    return render(request, 'order/history.html', {'orders': order_list, 'role': str(request.user.groups.all()[0].name)})
+    role = str(request.user.groups.all()[0].name)
+    if role != 'Admin' or role != 'Hospital Authority':
+        order_list = Order.objects.filter(order_by=request.user).order_by('-order_time')
+    else:
+        order_list = Order.objects.all().order_by('-order_time')
+    return render(request, 'order/history.html', {'orders': order_list, 'role': role})
 
 @login_required
 def order_detail(request, order_id):

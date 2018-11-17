@@ -75,7 +75,7 @@ def generate_itinerary(dispatch_list):
 
 def order_dispatch(request):
     status = [1,2,4,5]
-    order_list = list(Order.objects.filter(order_by=request.user).exclude(status__in=status))
+    order_list = list(Order.objects.all().exclude(status__in=status))
     for_dispatch = []
     in_queue = []
     med = []
