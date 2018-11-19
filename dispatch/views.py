@@ -21,8 +21,9 @@ import logging
 # Get an instance of a logger
 logger = logging.getLogger(__name__)
 
-import tsp
+#import tsp
 import numpy
+from tsp_solver.greedy_numpy import solve_tsp
 def generate_itinerary(dispatch_list):
     # get the clinics involved: 0 represents the hospital
     t = [0]
@@ -55,9 +56,10 @@ def generate_itinerary(dispatch_list):
             else:
                 dist = DistanceClinic.objects.filter(a__id = a, b__id = b).values('distance')
                 d[i][j] = dist[0]['distance']
-    dist = {(i, j): d[i][j] for i in r for j in r}
-    sol = tsp.tsp(r, dist)
-    sol = sol[1]
+    #dist = {(i, j): d[i][j] for i in r for j in r}
+    #sol = tsp.tsp(r, dist)
+    sol = solve_tsp(d)
+    #sol = sol[1]
     while sol[-1] != 0:
         temp = sol[-1]
         sol.remove(temp)
