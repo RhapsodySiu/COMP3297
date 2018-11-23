@@ -1,5 +1,5 @@
 from django.shortcuts import render, get_object_or_404, redirect
-from order.models import Order, DistanceClinicHospital, DistanceClinic
+from order.models import Order,OrderContent, MedicalSupply, Type, DistanceClinicHospital, DistanceClinic
 from django.http import HttpResponse, JsonResponse, FileResponse
 # Pagination
 from django.core.paginator import Paginator, EmptyPage, PageNotAnInteger
@@ -11,6 +11,17 @@ from django.contrib.auth.models import User, Group
 from django.conf.urls import url
 #datetime
 from datetime import datetime
+#pdf generation
+from reportlab.pdfgen import canvas
+#sending email
+from smtplib import SMTP_SSL, SMTPException
+from email.mime.text import MIMEText
+from email.mime.multipart import MIMEMultipart
+from email.mime.base import MIMEBase
+from email.utils import formataddr
+from email import encoders
+
+
 
 # import csv
 import csv
@@ -36,7 +47,7 @@ def generate_itinerary(dispatch_list):
     # create distance matrix from t
     r = range(len(t))
     d = numpy.zeros((len(t), len(t)))
-    
+
     # return list
     name = ["Queen Mary Hospital Drone Port"]
     latitude = [22.270257]
@@ -138,9 +149,57 @@ def download_itinerary(request):
 
 def mark_dispatched(request):
     orders = request.GET.getlist('order')
+    mailHost = "smtp.zoho.com"
+    mailUsername = "admin@accoladehk.com"
+    mailPassword = "knb9A1Zv3b3U"
+    sender = "admin@accoladehk.com"
+    content = ""
     for orderUUID in orders:
+
         order = Order.objects.get(id=orderUUID)
+        item_no = order.get_item_no()
         order.status = 4
         order.dispatched_time = datetime.now()
         order.save()
+        order_id = "order_id: " + order.id + "\n"
+        order_destination = order.clinic.__str__()+ "\n"
+        c = canvas.Canvas("ShippingLabel.pdf")
+        y= 600
+        c.drawString(50, y, "order id : " + order.id)
+        y-=20
+        order_content = OrderContent.objects.filter(order=orderUUID)
+        for item in order_content:
+            c.drawString(50, y , "Type: " + item.medical_supply.type.name + "           " + "Name: "+ item.medical_supply.description + " " )
+            y-=20
+            c.drawString(50,y , "Weight :" + str(item.weight) +"kg" + "           " +"Quantity :" + str(item.quantity) + "          "  )
+            y-=20
+        c.drawString(50,y, "order destination: " + order.clinic.__str__() )
+        c.save()
+        receiver=  order.order_by.email
+
+        msg = MIMEMultipart()
+        msg['From']= formataddr(["Dispatcher",sender])
+        msg['To'] = receiver
+        msg['Subject']= "Shipping label"
+        body= "Below is the PDF file containing the shipping label"
+        msg.attach(MIMEText(body,'plain'))
+
+        filename = "ShippingLabel.pdf"
+        attachment= open(filename, 'rb')
+
+        part = MIMEBase('application','octect-stream')
+        part.set_payload((attachment).read())
+        encoders.encode_base64(part)
+        part.add_header('Content-Disposition',"attachment; filename= "+filename)
+        msg.attach(part)
+
+        try:
+            smtpObj = SMTP_SSL(mailHost, 465)
+            smtpObj.login(mailUsername, mailPassword)
+            smtpObj.sendmail(sender, receiver, msg.as_string())
+            print("Email Sent")
+        except SMTPException:
+            print("Failed to send email")
+
+
     return redirect('dispatch:order_dispatch', permanent=True)
