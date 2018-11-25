@@ -13,6 +13,13 @@ from django.conf.urls import url
 from datetime import datetime
 #pdf generation
 from reportlab.pdfgen import canvas
+from reportlab.graphics.barcode import code39, code128, code93
+from reportlab.graphics.barcode import eanbc, qr, usps
+from reportlab.graphics.shapes import Drawing
+from reportlab.lib.pagesizes import letter
+from reportlab.lib.units import mm
+from reportlab.pdfgen import canvas
+from reportlab.graphics import renderPDF
 #sending email
 from smtplib import SMTP_SSL, SMTPException
 from email.mime.text import MIMEText
@@ -153,9 +160,7 @@ def mark_dispatched(request):
     mailUsername = "admin@accoladehk.com"
     mailPassword = "knb9A1Zv3b3U"
     sender = "admin@accoladehk.com"
-    content = ""
     for orderUUID in orders:
-
         order = Order.objects.get(id=orderUUID)
         item_no = order.get_item_no()
         order.status = 4
@@ -163,19 +168,22 @@ def mark_dispatched(request):
         order.save()
         order_id = "order_id: " + order.id + "\n"
         order_destination = order.clinic.__str__()+ "\n"
-        c = canvas.Canvas("ShippingLabel.pdf")
-        y= 600
-        c.drawString(50, y, "order id : " + order.id)
-        y-=20
-        order_content = OrderContent.objects.filter(order=orderUUID)
-        for item in order_content:
-            c.drawString(50, y , "Type: " + item.medical_supply.type.name + "           " + "Name: "+ item.medical_supply.description + " " )
-            y-=20
-            c.drawString(50,y , "Weight :" + str(item.weight) +"kg" + "           " +"Quantity :" + str(item.quantity) + "          "  )
-            y-=20
-        c.drawString(50,y, "order destination: " + order.clinic.__str__() )
-        c.save()
+        p = canvas.Canvas("ShippingLabel.pdf",pagesize=letter)
+        barcode_value = order_id
+        barcode39 = code39.Extended39(barcode_value)
+        p.drawString(10*mm, 260*mm, "Order ID: " + order_id)
+        barcode39.drawOn(p, 10*mm, 235*mm)
+        order_detail = OrderContent.objects.filter(order=orderUUID)
+        p.drawString(10*mm, 220*mm, "Destination (Clinic): " + str(order.clinic))
+        p.drawString(10*mm, 210*mm, "Items (" + str(order.get_total_weight()) + " kg): ")
+        x = 10*mm
+        y = 205*mm
+        for item in order_detail:
+            p.drawString(x, y, "(Type: " + str(item.medical_supply.type) + ") " + str(item.medical_supply.description) + ": " +  str(item.quantity) + " X " + str(item.medical_supply.weight) + " kg = " + str(item.quantity * item.medical_supply.weight) + " kg")
+            y -= 5*mm
+        p.save()        
         receiver=  order.order_by.email
+        print ( str(order.order_by.email))
 
         msg = MIMEMultipart()
         msg['From']= formataddr(["Dispatcher",sender])
