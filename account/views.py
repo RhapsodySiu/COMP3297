@@ -6,14 +6,15 @@ from enumfields import EnumIntegerField
 from enumfields import Enum
 
 from django.http import HttpResponse
-from django.shortcuts import render
+from django.shortcuts import render, redirect, render_to_response
 from django.contrib.auth import authenticate, login
 from django.contrib.auth.models import User, Group
-from .forms import LoginForm, RegistrationForm, TokenGenerationForm, RegistrationFormForCM
+from .forms import LoginForm, RegistrationForm, TokenGenerationForm, RegistrationFormForCM, UserEditForm
 from .models import Token, Role, ClinicManager
 from order.models import Clinic
 from django.contrib.auth.decorators import login_required
 from django.template.context_processors import csrf
+from django.contrib import messages
 
 # handle user login
 def user_login(request):
@@ -97,8 +98,6 @@ def doRegistration(request):
         Message = "Some information is missing or the username has been used by others."
         return render(request, 'account/register_error.html', {'message': Message, 'token': registrationForm.cleaned_data['token']})
     
-    
-
 @login_required
 def generateToken(request):
     generate_token_form = TokenGenerationForm()
@@ -154,3 +153,24 @@ def doTokenGeneration(request):
 def dashboard(request):
     #set section to track where the user is watching
     return render(request, 'account/dashboard.html', {'section': 'dashboard', 'role': str(request.user.groups.all()[0].name)})
+
+#changing profile details
+@login_required
+def edit_profile(request):
+    if request.method == 'POST':
+        form = UserEditForm(request.POST)
+        if form.is_valid():
+            cd = form.cleaned_data
+            user = User.objects.get(username=cd['username'])
+            user.email = cd['email']
+            user.first_name = cd['first_name']
+            user.last_name = cd['last_name']
+            user.save()
+            # messages.info(request, "Profile updated!")
+            messages.success(request, 'Your password was updated successfully!')
+            # return render_to_response('edit_profile', message='Profile updated')
+            return redirect('^edit_profile/', message='Profile updated')
+    else:
+        form = UserEditForm(initial={'username':request.user.username, 'email': request.user.email, 'first_name':request.user.first_name, 'last_name':request.user.last_name})
+    return render(request, 'account/edit_profile.html', {'form': form, 'role': str(request.user.groups.all()[0].name)})
+    # return render(request, 'account/edit_profile.html', {'user_form': registration_form})

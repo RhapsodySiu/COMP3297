@@ -26,10 +26,14 @@ class RegistrationFormForCM(RegistrationForm):
     class Meta(RegistrationForm.Meta):
         fields = RegistrationForm.Meta.fields + ('clinic',)
 
-class UserEditForm(forms.ModelForm):
+class UserEditForm(forms.Form):
+    username = forms.CharField(widget = forms.HiddenInput())
+    email = forms.CharField(label='Email', max_length=30)
+    first_name = forms.CharField(label='First Name', max_length=30)
+    last_name = forms.CharField(label='Last Name', max_length=30)
     class Meta:
         model = User
-        fields = ('first_name', 'last_name', 'email')
+        fields = ('username','first_name', 'last_name', 'email')
 
 class TokenGenerationForm(forms.ModelForm):
     role = EnumField(Role).formfield()

@@ -12,6 +12,11 @@ https://docs.djangoproject.com/en/2.1/ref/settings/
 
 import os
 from django.urls import reverse_lazy
+
+#to return messages
+from django.contrib.messages import constants as message_constants
+MESSAGE_LEVEL = message_constants.DEBUG
+
 # Set redirection
 LOGIN_REDIRECT_URL = reverse_lazy('dashboard') # Which URL to redirect after login if contrib.auth.views.login view gets no next parameter
 LOGIN_URL = reverse_lazy('login') # URL to redirect the user to log in (login_required decorator)

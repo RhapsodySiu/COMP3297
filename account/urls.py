@@ -11,5 +11,6 @@ urlpatterns = [
     url(r'^doRegistration/$', views.doRegistration, name='doRegistration'),
     url(r'^generateToken/', views.generateToken, name='token_generation'),
     url(r'^doTokenGeneration/', views.doTokenGeneration, name='doTokenGeneration'),
+    url(r'^edit_profile/', views.edit_profile, name="edit_profile")
     #url(r'^logout-then-login/$', logout_then_login, name='logout_then_login'),
 ]

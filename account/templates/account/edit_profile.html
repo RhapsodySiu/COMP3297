@@ -1,14 +1,48 @@
 {% extends "base.html" %}
+{% load static %}
+{% block menu %} {% include "menu.html" %} {% endblock %}
 
-{% block title %}Create an account{% endblock %}
+{% block title %} Dispatch order {% endblock %}
 
 {% block content %}
-  <h1>Create an account</h1>
-  <hr>
-  <p>Sign up to access ASP:</p>
-  <form class="form-group" action="{% url 'register' %}" method="post">
-    {{ user_form.as_p }}
-    {% csrf_token %}
-    <p><input class="btn btn-primary" type="submit" value="Create my account"></p>
-  </form>
+    <div class="row justify-content-center">
+        <div class="col-12 col-md-6 card mt-3 mb-5 p-5">
+            <div class="card-title">
+            <h3 class="col-sm-10">Profile</h3>
+            </div>
+            <div class="card-body">
+                <form action="{% url 'edit_profile' %}" method="POST">
+                <div class="form-group">
+                    {{ form.as_p }}
+                    {% csrf_token %}
+                    <!-- <input type="hidden" class="form-control" value="{{user.username}}"><br>
+                    <label for="email">Email</label>
+                    <input type="text" class="form-control" value="{{user.email}}"><br>
+                    <label for="firstName">First Name</label>
+                    <input type="text" class="form-control" value="{{user.first_name}}"><br>
+                    <label for="lastName">Last Name</label>
+                    <input type="text" class="form-control" value="{{user.last_name}}"> -->
+                    <!-- <label>Clinic managed <a href="#" data-toggle="tooltip" title="For clinic managers only">#</a></label>
+                    <select class="col-11 mt-2 form-control" disabled>
+                        <option>Tung Wah Group of Hospitals Fung Yiu King Hospital</option>
+                        <option>The Duchess of Kent Children's Hospital at Sandy Bay</option>
+                        <option>Prince Philip Dental Hospital</option>
+                        <option>Tsan Yuk Hospital</option>
+                        <option>Canossa Hospital</option>
+                        <option>Matilda International Hospital</option>
+                        <option>Yan Chai Hospital Shan King Child Care Centre</option>
+                        <option>Central District Health Centre General Out-Patient Clinic</option>
+                    </select> -->
+                </div>
+                <button type="submit" class="btn btn-primary btn-block">Change information</button>
+                </form>
+            </div>
+        </div>
+    </div>
+    {% for message in messages %}
+    <script>
+        alert('{{ message }}');
+    </script>
+    {% endfor %}
+
 {% endblock %}
