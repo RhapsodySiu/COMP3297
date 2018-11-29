@@ -5,9 +5,14 @@
 {% block title %} Dispatch order {% endblock %}
 
 {% block content %}
+
+{% if role == "Clinic Manager" or role == "Warehouse Personnel" %}
+<h1>You have no permission to access this page.</h1>
+{% else %}
 	<h3 class="mb-3">Order record</h3>
 	<p>{{test}}</p>
 	<h5>Orders to be loaded to the next available drone</h5>
+	{% if for_dispatch %}
 	<form action="{% url 'dispatch:download_itinerary' %}" method="get">
 	  {% for order in for_dispatch %}
 	    <input type="hidden" name="order" value="{{order.id}}">
@@ -20,6 +25,7 @@
         {% endfor %}
 	<button class="btn btn-info mb-3 ml-2" type="submit" id="dispatched">Mark these orders as dispatched</button>
     </form>
+	{% endif %}
 	<table class="table">
 		<thead>
 			<tr>
@@ -30,6 +36,7 @@
 			</tr>
 		</thead>
 		<tbody>
+		{% if for_dispatch %}
 			{% for order in for_dispatch %}
 				<tr>
 				<td>{{order.id}}</td>
@@ -39,6 +46,9 @@
 				</tr>
 			{% endfor %}
 			<tr><td colspan=2></td><td>{{total_loc}} Destination(s)</td><td>{{total_weight}} kg</td></tr>
+		{% else %}
+		    <tr><td colspan=4>There is no order in the queue</td></tr>
+		{% endif %}
 		</tbody>
 		</table>
 		<div></div>
@@ -79,4 +89,5 @@
 				{% endfor %}
 			</tbody>
 	</table>
+{% endif %}
 {% endblock %}

@@ -74,16 +74,16 @@ def generate_itinerary(dispatch_list):
             else:
                 dist = DistanceClinic.objects.filter(a__id = a, b__id = b).values('distance')
                 d[i][j] = dist[0]['distance']
-    #dist = {(i, j): d[i][j] for i in r for j in r}
-    #sol = tsp.tsp(r, dist)
-    sol = solve_tsp(d)
-    #sol = sol[1]
-    while sol[-1] != 0:
-        temp = sol[-1]
-        sol.remove(temp)
-        sol.insert(0, temp)
+    # append column and row
+    d = numpy.insert(d,0,d[:,0],axis=1)
+    d = numpy.insert(d,0,d[0],axis=0)
+    # tsp solver
+    sol = solve_tsp(d, endpoints = (0,1))
+
     for clinic in sol:
-        id = t[clinic]
+        id = 0
+        if clinic > 1:
+            id = t[clinic - 1]
         if id != 0:
             c = clinics[str(id)]
             s = str(c.latitude) + "," + str(c.longitude) + "," + str(c.altitude)

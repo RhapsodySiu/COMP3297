@@ -3,6 +3,14 @@
 {% block title %} Browse supplies {% endblock %}
 
 {% block content %}
+
+
+{% if role == 'Dispatcher' or role == 'Warehouse Personnel' %}
+
+  <h1>You do not have permission to access this page.</h1>
+
+{% else %}
+
   <h3>Browse supplies</h3>
   <hr>
   <div class="d-flex justify-content-around">
@@ -57,4 +65,7 @@
   <div class="row justify-content-center mb-4 mt-3">
     {% include "pagination.html" with page=supplies %}
   </div>
+
+{% endif %}
+
 {% endblock %}

@@ -5,6 +5,11 @@
 {% block title %} Dispatch order {% endblock %}
 
 {% block content %}
+
+{% if role == 'Clinic Manager' or role == 'Dispatcher' %}
+<h1>You have no permission to access this page.</h1>
+
+{% else %}
     <h3 class="mb-3 mt-3">Order record</h3>
     <h5>Queued for processing</h5>
     <table class="table">
@@ -77,4 +82,6 @@
         alert("The order is canceled");
     });
     </script>
+	
+{% endif %}
 {% endblock %}

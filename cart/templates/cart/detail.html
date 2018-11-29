@@ -5,6 +5,10 @@
 {% block title %} Temporary order {% endblock %}
 
 {% block content %}
+
+{% if role == "Dispatcher" or role == "Warehouse Personnel" %}
+<h1>You need to have permission to access this page.</h1>
+{% else %}
   <h1>Temporary order</h1>
 
   {% if msg == 'overweight' %}
@@ -69,5 +73,5 @@
 	</div>
   {% endif %}
   
-  
+{% endif %}
 {% endblock %}
