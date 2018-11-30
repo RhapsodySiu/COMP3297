@@ -7,7 +7,8 @@ from enumfields import Enum
 
 from django.http import HttpResponse
 from django.shortcuts import render, redirect, render_to_response
-from django.contrib.auth import authenticate, login
+from django.contrib.auth import authenticate, login, update_session_auth_hash
+from django.contrib.auth.forms import PasswordChangeForm
 from django.contrib.auth.models import User, Group
 from .forms import LoginForm, RegistrationForm, TokenGenerationForm, RegistrationFormForCM, UserEditForm
 from .models import Token, Role, ClinicManager
@@ -167,10 +168,28 @@ def edit_profile(request):
             user.last_name = cd['last_name']
             user.save()
             # messages.info(request, "Profile updated!")
-            messages.success(request, 'Your password was updated successfully!')
+            messages.success(request, 'Your profile was updated successfully!')
             # return render_to_response('edit_profile', message='Profile updated')
             return redirect('^edit_profile/', message='Profile updated')
     else:
         form = UserEditForm(initial={'username':request.user.username, 'email': request.user.email, 'first_name':request.user.first_name, 'last_name':request.user.last_name})
     return render(request, 'account/edit_profile.html', {'form': form, 'role': str(request.user.groups.all()[0].name)})
     # return render(request, 'account/edit_profile.html', {'user_form': registration_form})
+
+# for changing password
+@login_required
+def change_password(request):
+    if request.method == 'POST':
+        form = PasswordChangeForm(request.user, request.POST)
+        if form.is_valid():
+            user = form.save()
+            update_session_auth_hash(request, user)
+            messages.success(request, 'The password was changed')
+        else:
+            messages.warning(request, 'Unsuccesful password change') 
+    else:
+        form = PasswordChangeForm(request.user)
+    return render(request, 'account/change_password.html', {
+        'form': form,
+        'role': str(request.user.groups.all()[0].name)
+    })

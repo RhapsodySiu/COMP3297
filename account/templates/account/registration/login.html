@@ -17,6 +17,7 @@
       {% csrf_token %}
       <input type="hidden" name="text" value="{{ next }}" />
       <p><input type="submit" value="Login"></p>
+	  <a href="{% url 'passwordReset' %}">Fotgot password</a>
     </form>
   </div>
 {% endblock %}

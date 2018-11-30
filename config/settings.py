@@ -140,3 +140,11 @@ MEDIA_ROOT= os.path.join(BASE_DIR, 'media')
 
 # SESSSION files
 CART_SESSION_ID = 'cart'
+
+
+EMAIL_HOST = 'smtp.zoho.com'
+EMAIL_PORT = 587
+EMAIL_HOST_USER = 'admin@accoladehk.com'
+EMAIL_HOST_PASSWORD = 'knb9A1Zv3b3U'
+EMAIL_USE_TLS = True
+DEFAULT_FROM_EMAIL = 'admin@accoladehk.com'
