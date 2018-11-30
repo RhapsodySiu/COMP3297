@@ -11,6 +11,7 @@ Air Supply Pilot
 + pip install more-itertools
 + pip install pulp
 + pip install Pillow
++ pip install tsp_solver
 
 ## Current stage
 Construction
