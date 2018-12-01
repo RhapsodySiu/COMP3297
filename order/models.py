@@ -83,7 +83,7 @@ class Status(Enum):
         delivered = 'Delivered'
 
 class Order(models.Model):
-    id = models.CharField(max_length=50, primary_key=True, editable=False)
+    id = models.CharField(max_length=50, primary_key=True)
     order_by = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.CASCADE, default=None)
     priority = EnumIntegerField(Priority, default= 3)
     clinic = models.ForeignKey(Clinic, on_delete=models.CASCADE, default=None)

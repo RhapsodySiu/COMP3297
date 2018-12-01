@@ -5,18 +5,18 @@ Air Supply Pilot
 + pip install django
 + pip install django-enumfields
 + pip install reportlab
-+ pip install tsp
 + pip install numpy
 + pip install pandas
 + pip install more-itertools
 + pip install pulp
 + pip install Pillow
 + pip install tsp_solver
++ pip install django-widget-tweaks
 
 ## Current stage
 Construction
 
-update 17/11/2018
+update 1/12/2018
 ## To-do list
 + **Registration and Authentication** (坤)
   * ~~Enable sending registration token through email~~

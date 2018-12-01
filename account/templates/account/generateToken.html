@@ -4,6 +4,7 @@
 
 {% block menu %} {% include "menu.html" %} {% endblock %}
 
+{% load widget_tweaks %}
 {% block content %}
 
     <div class="row justify-content-center">
@@ -16,9 +17,21 @@
                 
                   <form class="form-group" action="{% url 'doTokenGeneration' %}" method="post">
                       <div class="form-group">
-                    {{ TokenGenerationForm.as_p }}
-                    {% csrf_token %}
                         </div>
+						{% for hidden in TokenGenerationForm.hidden_fields %}
+						  {{ hidden }}
+						{% endfor %}
+
+						{% for field in TokenGenerationForm.visible_fields %}
+						  <div class="form-group">
+							<label for="{{ field.id_for_label }}">{{ field.label }}</label>
+							{{ field|add_class:"form-control" }}
+							{% for error in field.errors %}
+							  <span class="help-block">{{ error }}</span>
+							{% endfor %}
+						  </div>
+						{% endfor %}
+						{% csrf_token %}
                     <p><input class="btn btn-primary" type="submit" value="Generate and Send the token"></p>
                           
                   </form>

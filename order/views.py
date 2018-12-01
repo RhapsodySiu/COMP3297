@@ -100,7 +100,7 @@ def order_create(request):
 @login_required
 def order_history(request):
     role = str(request.user.groups.all()[0].name)
-    if role != 'Admin' or role != 'Hospital Authority':
+    if role != 'Admin' and role != 'Hospital Authority':
         order_list = Order.objects.filter(order_by=request.user).order_by('-order_time')
     else:
         order_list = Order.objects.all().order_by('-order_time')

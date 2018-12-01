@@ -1,14 +1,42 @@
-{% extends "base.html" %}
-
+{% extends "loginBase.html" %}
+{% load staticfiles %}
+{% block style %}
+<link href="{% static "css/login.css" %}" rel="stylesheet">
+{% endblock %}
 {% block title %}Create an account{% endblock %}
 
+{% load widget_tweaks %}
 {% block content %}
-  <h1>Create an account</h1>
-  <hr>
-  <p>Sign up to access ASP:</p>
-  <form class="form-group" action="{% url 'doRegistration' %}" method="post">
-    {{ user_form.as_p }}
-    {% csrf_token %}
-    <p><input class="btn btn-primary" type="submit" value="Create my account"></p>
-  </form>
+
+  <div class="wrapper">
+  <div class="login-form">
+  <div class="col-12 col-md-8 main-div">
+	<div class="panel">
+	<h2>Create an account</h2>
+	<p>Sign up to access ASP:</p>
+    <form id="Login" action="{% url 'doRegistration' %}" method="post">
+	{% for hidden in user_form.hidden_fields %}
+  {{ hidden }}
+{% endfor %}
+
+{% for field in user_form.visible_fields %}
+  <div class="form-group">
+    <label for="{{ field.id_for_label }}">{{ field.label }}</label>
+    {{ field|add_class:"form-control" }}
+    {% for error in field.errors %}
+      <span class="help-block">{{ error }}</span>
+    {% endfor %}
+  </div>
+{% endfor %}
+
+      {% csrf_token %}
+      <input type="hidden" name="text" value="{{ next }}" />
+      <p><input type="submit" class="btn btn-primary" value="Create my account"></p>
+	  <a href="{% url 'passwordReset' %}">Fotgot password</a>
+    </form>
+	</div>
+	</div>
+  </div>
+  
+</div>
 {% endblock %}
