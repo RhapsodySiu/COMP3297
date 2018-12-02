@@ -1,5 +1,10 @@
 # COMP3297
 Air Supply Pilot
+All bugs are fixed and no bug is further spotted for now
+
+Admin account
+username: admin
+password: 2018SEasp
 
 ## Dependencies
 + pip install django
